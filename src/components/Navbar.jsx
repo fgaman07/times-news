@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { Home, Video, Search, User, BookOpen, Layers } from "lucide-react"
+import { useUser } from './admin/UserContext.jsx';
 
 const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
-const [currentUser, setCurrentUser] = useState(null);
-
-useEffect(() => {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-  setCurrentUser(user);
-}, []);
+  const { currentUser, logout } = useUser();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -21,8 +17,7 @@ useEffect(() => {
     setQuery("");
   };
   const handleLogout = () => {
-  localStorage.removeItem("currentUser");
-  setCurrentUser(null);
+    logout();
   navigate("/");
 };
 

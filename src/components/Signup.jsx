@@ -1,37 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../assets/api.js"
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
   e.preventDefault();
-
-  const existingUsers =
-    JSON.parse(localStorage.getItem("users")) || [];
-
-  // Prevent duplicate email
-  if (existingUsers.find((u) => u.email === email)) {
-    alert("Email already registered");
-    return;
-  }
-
-  const newUser = {
-    id: Date.now(),
-    name,
-    email,
-    password,
-    role: "user", // default role
-  };
-
-  localStorage.setItem(
-    "users",
-    JSON.stringify([...existingUsers, newUser])
-  );
-
-  alert("Signup successful!");
+  await api.post('/users', { name, email, password });
+  navigate('/login');
 };
 
 

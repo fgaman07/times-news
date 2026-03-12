@@ -40,11 +40,12 @@ function App() {
         id: Date.now(),
         name: "Super Admin",
         email: "admin@news.com",
-        password: "admin123",
+        password: "",
         role: "admin",
       };
 
-      
+      // add new admin to existing users list
+      const updatedUsers = [...users, adminUser];
 
       localStorage.setItem("users", JSON.stringify(updatedUsers));
     }

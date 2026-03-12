@@ -1,35 +1,21 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "./admin/UserContext.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- const handleSubmit = (e) => {
+ const handleSubmit = async e => {
   e.preventDefault();
-
-  const users =
-    JSON.parse(localStorage.getItem("users")) || [];
-
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
-
-  if (!user) {
-    alert("Invalid credentials");
-    return;
-  }
-
-  // Save logged-in user
-  localStorage.setItem("currentUser", JSON.stringify(user));
-
-  // Redirect based on role
-  if (user.role === "admin") {
-    navigate("/admin");
-  } else {
-    navigate("/");
+  try {
+    await login({ email, password });     // context method now talks to server
+    navigate(user.role === 'admin' ? '/admin' : '/');
+  } catch (err) {
+    alert('Invalid credentials');
   }
 };
 
