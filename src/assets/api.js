@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.Times_News_API_URL || '/api', // set in .env
+  baseURL: import.meta.env.VITE_API_URL || '/api', // set in .env
 });
 
 // add token if present
