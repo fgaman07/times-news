@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import api from "../../assets/api";
 
 const AdminComments = () => {
   const [comments, setComments] = useState([]);
@@ -6,29 +7,38 @@ const AdminComments = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-  const savedComments = JSON.parse(localStorage.getItem("comments"));
-  if (savedComments) {
-    setComments(savedComments);
-  }
-}, []);
+    const fetchComments = async () => {
+      try {
+        const { data } = await api.get("/comments");
+        setComments(data);
+      } catch (err) {
+        console.error("Failed to parse comments", err);
+      }
+    };
+    fetchComments();
+  }, []);
 
-
-  useEffect(() => {
-    localStorage.setItem("adminComments", JSON.stringify(comments));
-  }, [comments]);
-
-  const updateStatus = (id, status) => {
-    setComments((prev) =>
-      prev.map((c) =>
-        c.id === id ? { ...c, status } : c
-      )
-    );
+  const updateStatus = async (id, status) => {
+    try {
+      await api.put(`/comments/${id}`, { status });
+      setComments((prev) =>
+        prev.map((c) => ((c._id || c.id) === id ? { ...c, status } : c))
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
   };
 
-  const deleteComment = (id) => {
-    setComments((prev) =>
-      prev.filter((c) => c.id !== id)
-    );
+  const deleteComment = async (id) => {
+    if (!window.confirm("Delete this comment?")) return;
+    try {
+      await api.delete(`/comments/${id}`);
+      setComments((prev) => prev.filter((c) => (c._id || c.id) !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete comment");
+    }
   };
 
   const filteredComments = comments.filter((c) => {
@@ -84,7 +94,7 @@ const AdminComments = () => {
           <tbody>
             {filteredComments.map((comment) => (
               <tr
-                key={comment.id}
+                key={comment._id || comment.id}
                 className="border-t hover:bg-gray-50"
               >
                 <td className="p-4 font-medium">
@@ -112,7 +122,7 @@ const AdminComments = () => {
                 <td className="text-right p-4 space-x-3">
                   <button
                     onClick={() =>
-                      updateStatus(comment.id, "Approved")
+                      updateStatus(comment._id || comment.id, "Approved")
                     }
                     className="text-green-600 hover:underline text-sm"
                   >
@@ -121,7 +131,7 @@ const AdminComments = () => {
 
                   <button
                     onClick={() =>
-                      updateStatus(comment.id, "Rejected")
+                      updateStatus(comment._id || comment.id, "Rejected")
                     }
                     className="text-yellow-600 hover:underline text-sm"
                   >
@@ -130,7 +140,7 @@ const AdminComments = () => {
 
                   <button
                     onClick={() =>
-                      deleteComment(comment.id)
+                      deleteComment(comment._id || comment.id)
                     }
                     className="text-red-600 hover:underline text-sm"
                   >

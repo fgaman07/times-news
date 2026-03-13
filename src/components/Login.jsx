@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./admin/UserContext.jsx";
@@ -9,15 +9,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
- const handleSubmit = async e => {
-  e.preventDefault();
-  try {
-    await login({ email, password });     // context method now talks to server
-    navigate(user.role === 'admin' ? '/admin' : '/');
-  } catch (err) {
-    alert('Invalid credentials');
-  }
-};
+  const handleSubmit = async e => {
+    e.preventDefault();
+    try {
+      const loggedInUser = await login({ email, password });
+      navigate(loggedInUser?.role === 'admin' ? '/admin' : '/');
+    } catch (err) {
+      alert('Invalid credentials');
+    }
+  };
 
 
   return (

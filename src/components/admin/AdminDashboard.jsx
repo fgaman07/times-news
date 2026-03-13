@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import api from "../../assets/api";
+import { useUser } from "./UserContext";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -9,28 +11,36 @@ const AdminDashboard = () => {
   });
 
   const [recentNews, setRecentNews] = useState([]);
-  const currentUser = JSON.parse(
-    localStorage.getItem("currentUser")
-  );
+  const { currentUser } = useUser();
 
   useEffect(() => {
-    const news =
-      JSON.parse(localStorage.getItem("adminNews")) || [];
-    const videos =
-      JSON.parse(localStorage.getItem("adminVideos")) || [];
-    const webstories =
-      JSON.parse(localStorage.getItem("adminWebstories")) || [];
-    const users =
-      JSON.parse(localStorage.getItem("users")) || [];
+    const fetchDashboardData = async () => {
+      try {
+        const [newsRes, videosRes, storiesRes, usersRes] = await Promise.all([
+          api.get('/news').catch(() => ({ data: [] })),
+          api.get('/videos').catch(() => ({ data: [] })),
+          api.get('/webstories').catch(() => ({ data: [] })),
+          api.get('/users').catch(() => ({ data: [] }))
+        ]);
 
-    setStats({
-      news: news.length,
-      videos: videos.length,
-      webstories: webstories.length,
-      users: users.length,
-    });
+        const news = newsRes.data || [];
+        const videos = videosRes.data || [];
+        const webstories = storiesRes.data || [];
+        const users = usersRes.data || [];
 
-    setRecentNews(news.slice(-5).reverse());
+        setStats({
+          news: news.length,
+          videos: videos.length,
+          webstories: webstories.length,
+          users: users.length,
+        });
+
+        setRecentNews(news.slice(-5).reverse());
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+      }
+    };
+    fetchDashboardData();
   }, []);
 
   return (
@@ -71,7 +81,7 @@ const AdminDashboard = () => {
           <tbody>
             {recentNews.map((item) => (
               <tr
-                key={item.id}
+                key={item._id || item.id}
                 className="border-b hover:bg-gray-50"
               >
                 <td className="py-2">{item.title}</td>

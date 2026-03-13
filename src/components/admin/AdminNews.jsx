@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
+import api from "../../assets/api";
 
 const AdminNews = () => {
   const [categories, setCategories] = useState([]);
 
-useEffect(() => {
-  const saved =
-    JSON.parse(localStorage.getItem("adminCategories")) || [];
-  setCategories(saved);
-}, []);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await api.get('/categories');
+        setCategories(data);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const [articles, setArticles] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -21,16 +28,18 @@ useEffect(() => {
     image: null,
   });
 
-  /* Load from localStorage */
+  /* Fetch from Backend */
   useEffect(() => {
-    const saved = localStorage.getItem("adminArticles");
-    if (saved) setArticles(JSON.parse(saved));
+    const fetchArticles = async () => {
+      try {
+        const { data } = await api.get('/news');
+        setArticles(data);
+      } catch (err) {
+        console.error("Failed to fetch articles", err);
+      }
+    };
+    fetchArticles();
   }, []);
-
-  /* Save to localStorage */
-  useEffect(() => {
-    localStorage.setItem("adminArticles", JSON.stringify(articles));
-  }, [articles]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,28 +64,28 @@ useEffect(() => {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.title || !formData.category || !formData.content)
       return;
 
-    const articleData = {
-      id: editingId || Date.now(),
-      ...formData,
-      createdAt: new Date().toLocaleDateString(),
-    };
-
-    if (editingId) {
-      setArticles((prev) =>
-        prev.map((a) => (a.id === editingId ? articleData : a))
-      );
-      setEditingId(null);
-    } else {
-      setArticles((prev) => [...prev, articleData]);
+    try {
+      if (editingId) {
+        const { data } = await api.put(`/news/${editingId}`, formData);
+        setArticles((prev) =>
+          prev.map((a) => (a.id === editingId || a._id === editingId ? data : a))
+        );
+        setEditingId(null);
+      } else {
+        const { data } = await api.post('/news', formData);
+        setArticles((prev) => [...prev, data]);
+      }
+      resetForm();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save article");
     }
-
-    resetForm();
   };
 
   const resetForm = () => {
@@ -91,13 +100,26 @@ useEffect(() => {
   };
 
   const handleEdit = (article) => {
-    setFormData(article);
+    setFormData({
+      title: article.title || "",
+      content: article.content || "",
+      category: article.category || "",
+      status: article.status || "Draft",
+      image: article.image || null,
+    });
     setImagePreview(article.image);
-    setEditingId(article.id);
+    setEditingId(article._id || article.id);
   };
 
-  const handleDelete = (id) => {
-    setArticles((prev) => prev.filter((a) => a.id !== id));
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this article?")) return;
+    try {
+      await api.delete(`/news/${id}`);
+      setArticles((prev) => prev.filter((a) => (a._id || a.id) !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete article");
+    }
   };
 
   return (
@@ -279,7 +301,7 @@ useEffect(() => {
                 </tr>
               ) : (
                 articles.map((article) => (
-                  <tr key={article.id} className="border-t hover:bg-gray-50">
+                  <tr key={article._id || article.id} className="border-t hover:bg-gray-50">
                     <td className="p-3">
                       {article.image && (
                         <img
@@ -311,7 +333,7 @@ useEffect(() => {
                     </td>
 
                     <td className="p-3 text-gray-500">
-                      {article.createdAt}
+                      {new Date(article.createdAt || Date.now()).toLocaleDateString()}
                     </td>
 
                     <td className="p-3 space-x-2">
@@ -323,7 +345,7 @@ useEffect(() => {
                       </button>
 
                       <button
-                        onClick={() => handleDelete(article.id)}
+                        onClick={() => handleDelete(article._id || article.id)}
                         className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm"
                       >
                         Delete

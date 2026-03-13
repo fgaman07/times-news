@@ -1,14 +1,5 @@
 import { useState, useEffect } from "react";
-
-const defaultCategories = [
-  "राजनीति",
-    "प्रौद्योगिकी",
-    "खेल",
-    "व्यापार",
-    "मनोरंजन",
-    "स्वास्थ्य",
-    "विश्व",
-];
+import api from "../../assets/api";
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -16,71 +7,63 @@ const AdminCategories = () => {
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-  const saved = JSON.parse(
-    localStorage.getItem("adminCategories")
-  );
+    const fetchCategories = async () => {
+      try {
+        const { data } = await api.get("/categories");
+        setCategories(data);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
-  if (!saved || saved.length === 0) {
-    const formatted = defaultCategories.map((cat) => ({
-      id: Date.now() + Math.random(),
-      name: cat,
-    }));
-
-    setCategories(formatted);
-    localStorage.setItem(
-      "adminCategories",
-      JSON.stringify(formatted)
-    );
-  } else {
-    setCategories(saved);
-  }
-}, []);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "adminCategories",
-      JSON.stringify(categories)
-    );
-  }, [categories]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) return;
 
     // prevent duplicates
     if (
       categories.some(
-        (c) => c.name.toLowerCase() === name.toLowerCase()
+        (c) => c.name.toLowerCase() === name.trim().toLowerCase()
       )
     ) {
       alert("Category already exists");
       return;
     }
 
-    const categoryData = {
-      id: editingId || Date.now(),
-      name,
-    };
-
-    if (editingId) {
-      setCategories((prev) =>
-        prev.map((c) => (c.id === editingId ? categoryData : c))
-      );
-      setEditingId(null);
-    } else {
-      setCategories((prev) => [...prev, categoryData]);
+    try {
+      if (editingId) {
+        const { data } = await api.put(`/categories/${editingId}`, { name: name.trim() });
+        setCategories((prev) =>
+          prev.map((c) => (c._id === editingId || c.id === editingId ? data : c))
+        );
+        setEditingId(null);
+      } else {
+        const { data } = await api.post("/categories", { name: name.trim() });
+        setCategories((prev) => [...prev, data]);
+      }
+      setName("");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save category");
     }
-
-    setName("");
   };
 
   const handleEdit = (cat) => {
     setName(cat.name);
-    setEditingId(cat.id);
+    setEditingId(cat._id || cat.id);
   };
 
-  const handleDelete = (id) => {
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this category?")) return;
+    try {
+      await api.delete(`/categories/${id}`);
+      setCategories((prev) => prev.filter((c) => (c._id || c.id) !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete category");
+    }
   };
 
   return (
@@ -104,7 +87,7 @@ const AdminCategories = () => {
       <ul className="space-y-3">
         {categories.map((cat) => (
           <li
-            key={cat.id}
+            key={cat._id || cat.id}
             className="flex justify-between bg-gray-100 p-3 rounded-md"
           >
             {cat.name}
@@ -118,7 +101,7 @@ const AdminCategories = () => {
               </button>
 
               <button
-                onClick={() => handleDelete(cat.id)}
+                onClick={() => handleDelete(cat._id || cat.id)}
                 className="text-red-600"
               >
                 Delete

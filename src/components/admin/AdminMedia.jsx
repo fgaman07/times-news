@@ -1,36 +1,49 @@
 import { useState, useEffect } from "react";
+import api from "../../assets/api";
 
 const AdminMedia = () => {
   const [media, setMedia] = useState([]);
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("adminMedia");
-    if (saved) setMedia(JSON.parse(saved));
+    const fetchMedia = async () => {
+      try {
+        const { data } = await api.get("/media");
+        setMedia(data);
+      } catch (err) {
+        console.error("Failed to load media", err);
+      }
+    };
+    fetchMedia();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("adminMedia", JSON.stringify(media));
-  }, [media]);
 
   const handleUpload = (file) => {
     const reader = new FileReader();
-    reader.onloadend = () => {
-      const newMedia = {
-        id: Date.now(),
-        name: file.name,
-        url: reader.result,
-      };
-      setMedia((prev) => [...prev, newMedia]);
-      setPreview(null);
+    reader.onloadend = async () => {
+      try {
+        const { data } = await api.post("/media", {
+          name: file.name,
+          url: reader.result,
+        });
+        setMedia((prev) => [...prev, data]);
+        setPreview(null);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to upload media");
+      }
     };
     reader.readAsDataURL(file);
   };
 
-  const deleteMedia = (id) => {
-    setMedia((prev) =>
-      prev.filter((m) => m.id !== id)
-    );
+  const deleteMedia = async (id) => {
+    if (!window.confirm("Are you sure?")) return;
+    try {
+      await api.delete(`/media/${id}`);
+      setMedia((prev) => prev.filter((m) => (m._id || m.id) !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete media");
+    }
   };
 
   return (
@@ -88,7 +101,7 @@ const AdminMedia = () => {
       <div className="grid grid-cols-4 gap-6">
         {media.map((item) => (
           <div
-            key={item.id}
+            key={item._id || item.id}
             className="relative group bg-white rounded-lg overflow-hidden shadow"
           >
             <img
@@ -99,7 +112,7 @@ const AdminMedia = () => {
 
             <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
               <button
-                onClick={() => deleteMedia(item.id)}
+                onClick={() => deleteMedia(item._id || item.id)}
                 className="bg-red-600 text-white px-4 py-1 rounded text-sm"
               >
                 Delete

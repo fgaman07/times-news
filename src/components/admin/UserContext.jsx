@@ -13,15 +13,16 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-  const { data } = await api.post('/auth/login', credentials);
-  localStorage.setItem('authToken', data.token);
-  setCurrentUser(data.user);
-};
+    const { data } = await api.post('/auth/login', credentials);
+    localStorage.setItem('authToken', data.token);
+    setCurrentUser(data.user);
+    return data.user;
+  };
 
-const logout = () => {
-  localStorage.removeItem('authToken');
-  setCurrentUser(null);
-};
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    setCurrentUser(null);
+  };
 
   return (
     <UserContext.Provider value={{ currentUser, login, logout }}>

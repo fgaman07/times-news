@@ -28,28 +28,7 @@ import AdminComments from './components/admin/AdminComments'
 import AdminSettings from './components/admin/AdminSettings'
 
 function App() {
-  useEffect(() => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const adminExists = users.find(
-      (user) => user.email === "admin@news.com"
-    );
-
-    if (!adminExists) {
-      const adminUser = {
-        id: Date.now(),
-        name: "Super Admin",
-        email: "admin@news.com",
-        password: "",
-        role: "admin",
-      };
-
-      // add new admin to existing users list
-      const updatedUsers = [...users, adminUser];
-
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-    }
-  }, []);
   return (
     <>
       <Navbar />

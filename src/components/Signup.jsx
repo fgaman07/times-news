@@ -3,15 +3,16 @@ import { Link } from "react-router-dom";
 import api from "../assets/api.js"
 
 const Signup = () => {
-  const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUserName] = useState("");
 
   const handleSubmit = async e => {
-  e.preventDefault();
-  await api.post('/users', { name, email, password });
-  navigate('/login');
-};
+    e.preventDefault();
+    await api.post('/users/register', { fullName, email, username, password });
+    navigate('/login');
+  };
 
 
   return (
@@ -25,11 +26,20 @@ const Signup = () => {
           <input
             type="text"
             placeholder="नाम"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
           />
+          <input
+            type="text"
+            placeholder="username"
+            value={username}
+            onChange={(e) => setUserName(e.target.value)}
+            className="w-full border rounded px-3 py-2"
+            required
+          />
+
 
           <input
             type="email"
