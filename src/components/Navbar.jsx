@@ -119,7 +119,7 @@ const Navbar = () => {
   </button>
 ) : (
   <div className="flex items-center gap-4">
-    {currentUser.role === "admin" && (
+    {(currentUser.role === "admin" || currentUser.role === "ADMIN") && (
       <button
         onClick={() => navigate("/admin")}
         className="hover:text-orange-500"

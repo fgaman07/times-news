@@ -10,7 +10,7 @@ const AdminCategories = () => {
     const fetchCategories = async () => {
       try {
         const { data } = await api.get("/categories");
-        setCategories(data);
+        setCategories(data.data || []);
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }
@@ -36,12 +36,12 @@ const AdminCategories = () => {
       if (editingId) {
         const { data } = await api.put(`/categories/${editingId}`, { name: name.trim() });
         setCategories((prev) =>
-          prev.map((c) => (c._id === editingId || c.id === editingId ? data : c))
+          prev.map((c) => (c._id === editingId || c.id === editingId ? data.data || data : c))
         );
         setEditingId(null);
       } else {
         const { data } = await api.post("/categories", { name: name.trim() });
-        setCategories((prev) => [...prev, data]);
+        setCategories((prev) => [...prev, data.data || data]);
       }
       setName("");
     } catch (err) {

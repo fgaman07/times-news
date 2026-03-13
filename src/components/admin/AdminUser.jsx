@@ -15,7 +15,7 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
       try {
         const { data } = await api.get("/users");
-        setUsers(data);
+        setUsers(data.data || (Array.isArray(data) ? data : []));
       } catch (err) {
         console.error("Failed to load users", err);
       }
@@ -30,7 +30,7 @@ const AdminUsers = () => {
 
     try {
       const { data } = await api.post("/users", formData);
-      setUsers((prev) => [...prev, data]);
+      setUsers((prev) => [...prev, data.data || data]);
       setFormData({ name: "", email: "", role: "Editor" });
     } catch (err) {
       console.error(err);

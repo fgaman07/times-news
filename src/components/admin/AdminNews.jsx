@@ -8,7 +8,7 @@ const AdminNews = () => {
     const fetchCategories = async () => {
       try {
         const { data } = await api.get('/categories');
-        setCategories(data);
+        setCategories(data.data || []);
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }
@@ -24,16 +24,16 @@ const AdminNews = () => {
     title: "",
     content: "",
     category: "",
-    status: "Draft",
-    image: null,
+    status: "DRAFT",
+    thumbnail: null,
   });
 
   /* Fetch from Backend */
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const { data } = await api.get('/news');
-        setArticles(data);
+        const { data } = await api.get('/articles'); // updated endpoint
+        setArticles(data.data?.articles || []);
       } catch (err) {
         console.error("Failed to fetch articles", err);
       }
@@ -58,7 +58,7 @@ const AdminNews = () => {
       setImagePreview(reader.result);
       setFormData((prev) => ({
         ...prev,
-        image: reader.result,
+        thumbnail: file, // Store the actual file for FormData
       }));
     };
     reader.readAsDataURL(file);
@@ -70,16 +70,25 @@ const AdminNews = () => {
     if (!formData.title || !formData.category || !formData.content)
       return;
 
+    const multipartData = new FormData();
+    multipartData.append("title", formData.title);
+    multipartData.append("content", formData.content);
+    multipartData.append("category", formData.category);
+    multipartData.append("status", formData.status);
+    if (formData.thumbnail) {
+      multipartData.append("thumbnail", formData.thumbnail);
+    }
+
     try {
       if (editingId) {
-        const { data } = await api.put(`/news/${editingId}`, formData);
+        const { data } = await api.patch(`/articles/${editingId}`, multipartData);
         setArticles((prev) =>
-          prev.map((a) => (a.id === editingId || a._id === editingId ? data : a))
+          prev.map((a) => (a.id === editingId || a._id === editingId ? data.data || data : a))
         );
         setEditingId(null);
       } else {
-        const { data } = await api.post('/news', formData);
-        setArticles((prev) => [...prev, data]);
+        const { data } = await api.post('/articles', multipartData);
+        setArticles((prev) => [...prev, data.data || data]);
       }
       resetForm();
     } catch (err) {
@@ -93,8 +102,8 @@ const AdminNews = () => {
       title: "",
       content: "",
       category: "",
-      status: "Draft",
-      image: null,
+      status: "DRAFT",
+      thumbnail: null,
     });
     setImagePreview(null);
   };
@@ -103,18 +112,18 @@ const AdminNews = () => {
     setFormData({
       title: article.title || "",
       content: article.content || "",
-      category: article.category || "",
-      status: article.status || "Draft",
-      image: article.image || null,
+      category: article.category?._id || article.category || "",
+      status: article.status || "DRAFT",
+      thumbnail: null, // Don't set File here, handle separately if you want to preview old image
     });
-    setImagePreview(article.image);
+    setImagePreview(article.thumbnail || article.image);
     setEditingId(article._id || article.id);
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this article?")) return;
     try {
-      await api.delete(`/news/${id}`);
+      await api.delete(`/articles/${id}`);
       setArticles((prev) => prev.filter((a) => (a._id || a.id) !== id));
     } catch (err) {
       console.error(err);
@@ -167,18 +176,18 @@ const AdminNews = () => {
               Category
             </label>
             <select
-  name="category"
-  value={formData.category}
-  onChange={handleChange}
-  className="border p-2 rounded w-full"
->
-  <option value="">Select Category</option>
-  {categories.map((cat) => (
-    <option key={cat.id} value={cat.name}>
-      {cat.name}
-    </option>
-  ))}
-</select>
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="border p-2 rounded w-full"
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat._id || cat.id} value={cat._id || cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
 
           </div>
 
@@ -193,21 +202,22 @@ const AdminNews = () => {
               onChange={handleChange}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="Draft">Draft</option>
-              <option value="Published">Published</option>
+              <option value="DRAFT">Draft</option>
+              <option value="PUBLISHED">Published</option>
+              <option value="ARCHIVED">Archived</option>
             </select>
           </div>
 
           {/* Image Upload */}
           {/* Image Upload */}
-<div>
-  <label className="block font-semibold mb-2 text-gray-700">
-    Upload Featured Image
-  </label>
+          <div>
+            <label className="block font-semibold mb-2 text-gray-700">
+              Upload Featured Image
+            </label>
 
-  <div className="flex items-center justify-center w-full">
-    <label className="w-full cursor-pointer">
-      <div className="
+            <div className="flex items-center justify-center w-full">
+              <label className="w-full cursor-pointer">
+                <div className="
         flex flex-col items-center justify-center
         w-full h-40
         border-2 border-dashed border-gray-300
@@ -216,50 +226,50 @@ const AdminNews = () => {
         hover:bg-gray-100
         transition duration-200
       ">
-        <svg
-          className="w-10 h-10 text-gray-400 mb-2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3 16.5V19a2 2 0 002 2h14a2 2 0 002-2v-2.5M7 10l5-5m0 0l5 5m-5-5v12"
-          />
-        </svg>
+                  <svg
+                    className="w-10 h-10 text-gray-400 mb-2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5V19a2 2 0 002 2h14a2 2 0 002-2v-2.5M7 10l5-5m0 0l5 5m-5-5v12"
+                    />
+                  </svg>
 
-        <p className="text-sm text-gray-500">
-          Click to upload image
-        </p>
-        <p className="text-xs text-gray-400 mt-1">
-          PNG, JPG up to 5MB
-        </p>
-      </div>
+                  <p className="text-sm text-gray-500">
+                    Click to upload image
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    PNG, JPG up to 5MB
+                  </p>
+                </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="hidden"
-      />
-    </label>
-  </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
 
-  {imagePreview && (
-    <div className="mt-4">
-      <p className="text-sm font-medium text-gray-600 mb-2">
-        Preview:
-      </p>
-      <img
-        src={imagePreview}
-        alt="Preview"
-        className="w-56 rounded-lg shadow-md object-cover"
-      />
-    </div>
-  )}
-</div>
+            {imagePreview && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-600 mb-2">
+                  Preview:
+                </p>
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-56 rounded-lg shadow-md object-cover"
+                />
+              </div>
+            )}
+          </div>
 
 
           {/* Submit */}
@@ -303,9 +313,9 @@ const AdminNews = () => {
                 articles.map((article) => (
                   <tr key={article._id || article.id} className="border-t hover:bg-gray-50">
                     <td className="p-3">
-                      {article.image && (
+                      {(article.thumbnail || article.image) && (
                         <img
-                          src={article.image}
+                          src={article.thumbnail || article.image}
                           alt=""
                           className="w-14 h-14 rounded object-cover"
                         />
@@ -317,16 +327,15 @@ const AdminNews = () => {
                     </td>
 
                     <td className="p-3 text-gray-600">
-                      {article.category}
+                      {article.category?.name || article.category}
                     </td>
 
                     <td className="p-3">
                       <span
-                        className={`px-3 py-1 text-sm rounded-full ${
-                          article.status === "Published"
+                        className={`px-3 py-1 text-sm rounded-full ${article.status === "PUBLISHED"
                             ? "bg-green-100 text-green-700"
                             : "bg-yellow-100 text-yellow-700"
-                        }`}
+                          }`}
                       >
                         {article.status}
                       </span>

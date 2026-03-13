@@ -17,16 +17,16 @@ const AdminDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [newsRes, videosRes, storiesRes, usersRes] = await Promise.all([
-          api.get('/news').catch(() => ({ data: [] })),
-          api.get('/videos').catch(() => ({ data: [] })),
-          api.get('/webstories').catch(() => ({ data: [] })),
-          api.get('/users').catch(() => ({ data: [] }))
+          api.get('/articles').catch(() => ({ data: { data: { articles: [] } } })),
+          api.get('/videos').catch(() => ({ data: { data: [] } })),
+          api.get('/webstories').catch(() => ({ data: { data: [] } })),
+          api.get('/users').catch(() => ({ data: { data: [] } }))
         ]);
 
-        const news = newsRes.data || [];
-        const videos = videosRes.data || [];
-        const webstories = storiesRes.data || [];
-        const users = usersRes.data || [];
+        const news = newsRes.data?.data?.articles || [];
+        const videos = videosRes.data?.data || [];
+        const webstories = storiesRes.data?.data || [];
+        const users = usersRes.data?.data || [];
 
         setStats({
           news: news.length,
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">
-          Welcome, {currentUser?.name}
+          Welcome, {currentUser?.fullName || currentUser?.name || 'Admin'}
         </h1>
         <p className="text-gray-500">
           {new Date().toDateString()}
@@ -85,10 +85,10 @@ const AdminDashboard = () => {
                 className="border-b hover:bg-gray-50"
               >
                 <td className="py-2">{item.title}</td>
-                <td>{item.category}</td>
+                <td>{item.category?.name || item.category}</td>
                 <td>
-                  <span className="text-green-600 text-sm">
-                    Published
+                  <span className={`text-sm ${item.status === 'PUBLISHED' ? 'text-green-600' : 'text-yellow-600'}`}>
+                    {item.status || "DRAFT"}
                   </span>
                 </td>
               </tr>

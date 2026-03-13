@@ -12,10 +12,14 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
+      console.log("Attempting login...");
       const loggedInUser = await login({ email, password });
-      navigate(loggedInUser?.role === 'admin' ? '/admin' : '/');
+      console.log("Login successful, user:", loggedInUser);
+      navigate(loggedInUser?.role === 'ADMIN' || loggedInUser?.role === 'admin' ? '/admin' : '/');
     } catch (err) {
-      alert('Invalid credentials');
+      console.error("Login failed:", err);
+      // More detailed error alert
+      alert(`Login failed: ${err.response?.data?.message || err.message}`);
     }
   };
 

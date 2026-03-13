@@ -1,8 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { TrendingUp } from 'lucide-react';
-import { useNavigate } from "react-router-dom"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom"
 
 const NewsSection = () => {
   const navigate = useNavigate();
@@ -22,28 +21,26 @@ const NewsSection = () => {
   "फोटोज़": "photos"
 };
 
-
   useEffect(() => {
-  const fetchNews = async () => {
-    try {
-      const query = categoryName
-        ? categoryMap[decodeURIComponent(categoryName)] || "india"
-        : "india";
+    const fetchNews = async () => {
+      try {
+        const query = categoryName
+          ? categoryMap[decodeURIComponent(categoryName)] || "india"
+          : "india";
 
-      const res = await fetch(
-        `https://newsapi.org/v2/everything?q=${query}&language=hi&apiKey=${API_KEY}`
-      );
+        const res = await fetch(
+          `https://newsapi.org/v2/everything?q=${query}&language=hi&apiKey=${API_KEY}`
+        );
 
-      const data = await res.json();
-      setNews(data.articles || []);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        const data = await res.json();
+        setNews(data.articles || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  fetchNews();
-}, [categoryName]);
-
+    fetchNews();
+  }, [categoryName]);
 
   const trending = news.slice(0, 5);
   const latest = news.slice(5, 13);
@@ -106,9 +103,7 @@ const NewsSection = () => {
 
             <div>
               <h2 className="font-bold text-base">{item.title}</h2>
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {item.description}
-              </p>
+              <p className="text-sm text-gray-600 line-clamp-2 mt-2" dangerouslySetInnerHTML={{ __html: item.description || '' }}></p>
             </div>
           </div>
         ))}

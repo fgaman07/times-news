@@ -15,7 +15,6 @@ import WebStoryPage from './components/WebStoryPage'
 
 import AdminRoute from './components/admin/AdminRoute'
 import AdminLayout from './components/admin/AdminLayout'
-import AdminLogin from './components/admin/AdminLogin'
 import AdminNews from './components/admin/AdminNews'
 import AdminDashboard from './components/admin/AdminDashboard'
 import AdminVideos from './components/admin/AdminVideos'
@@ -35,7 +34,7 @@ function App() {
 
       <Routes>
         <Route path="/" element ={<Home />} />
-        <Route path="/news/:index" element={<NewsDetail />} />
+        <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/category/:categoryName" element={<Home />} />
         <Route path='/search' element={<SearchPage />} />
         <Route path='/login' element={<Login />} />
@@ -52,7 +51,6 @@ function App() {
             <AdminLayout />
           </AdminRoute>
         }>
-          <Route path='login' element={<AdminLogin />} />
           <Route index element={<AdminDashboard />} />
           <Route path="news" element={<AdminNews />} />
           <Route path="videos" element={<AdminVideos />} />
