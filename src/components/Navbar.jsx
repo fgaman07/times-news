@@ -91,22 +91,22 @@ const Navbar = () => {
         </div>
 
         {/* 🟢 RIGHT: Secondary actions */}
-        <div className="w-64 flex justify-end gap-4 font-bold">
+        <div className="w-auto flex justify-end gap-5 font-bold shrink-0">
             <NavLink to="/epaper" className={({ isActive }) =>
-    `flex items-center gap-2 hover:text-orange-500 ${
+    `flex items-center gap-2 hover:text-orange-500 whitespace-nowrap ${
       isActive ? "text-orange-500 border-b-2 border-orange-500" : ""
     }`
   }>
-                <BookOpen size={25} />
+                <BookOpen size={20} />
                 <span>ई-पेपर</span>
             </NavLink>
 
             <NavLink to="/webstory" className={({ isActive }) =>
-    `flex items-center gap-2 hover:text-orange-500 ${
+    `flex items-center gap-2 hover:text-orange-500 whitespace-nowrap ${
       isActive ? "text-orange-500 border-b-2 border-orange-500" : ""
     }`
   }>
-                <Layers size={25} />
+                <Layers size={20} />
                 <span>वेब स्टोरी</span>
             </NavLink>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../assets/api";
+import { MessageSquare, Search, Filter, CheckCircle2, XCircle, Trash2, Clock } from "lucide-react";
 
 const AdminComments = () => {
   const [comments, setComments] = useState([]);
@@ -9,8 +10,9 @@ const AdminComments = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
+        // Assuming your API returns an array or { data: array }
         const { data } = await api.get("/comments");
-        setComments(data);
+        setComments(data.data || data || []);
       } catch (err) {
         console.error("Failed to parse comments", err);
       }
@@ -42,126 +44,153 @@ const AdminComments = () => {
   };
 
   const filteredComments = comments.filter((c) => {
-    const matchesFilter =
-      filter === "All" || c.status === filter;
-    const matchesSearch =
-      c.user.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = filter === "All" || c.status === filter;
+    const matchesSearch = c.user?.toLowerCase().includes(search.toLowerCase()) || c.content?.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">
-          Manage Comments
-        </h2>
-
-        <div className="flex gap-3">
-          <input
-            type="text"
-            placeholder="Search by user..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border rounded-md px-3 py-2 text-sm"
-          />
-
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="border rounded-md px-3 py-2 text-sm"
-          >
-            <option>All</option>
-            <option>Approved</option>
-            <option>Pending</option>
-            <option>Rejected</option>
-          </select>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Comments & Moderation</h1>
+          <p className="text-sm font-medium text-slate-500 mt-1">Review and manage user interactions</p>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl shadow overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100 text-gray-600 text-sm">
-            <tr>
-              <th className="p-4">User</th>
-              <th>Comment</th>
-              <th>Status</th>
-              <th className="text-right p-4">Actions</th>
-            </tr>
-          </thead>
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+        
+        {/* Toolbar */}
+        <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
+          <div className="relative max-w-md w-full">
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search by user or content..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-slate-800 placeholder:text-slate-400 shadow-sm"
+            />
+          </div>
 
-          <tbody>
-            {filteredComments.map((comment) => (
-              <tr
-                key={comment._id || comment.id}
-                className="border-t hover:bg-gray-50"
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Filter className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="pl-10 pr-8 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-slate-700 shadow-sm appearance-none cursor-pointer"
               >
-                <td className="p-4 font-medium">
-                  {comment.user}
-                </td>
+                <option value="All">All Status</option>
+                <option value="Approved">Approved</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-                <td className="max-w-xs truncate">
-                  {comment.content}
-                </td>
-
-                <td>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      comment.status === "Approved"
-                        ? "bg-green-100 text-green-700"
-                        : comment.status === "Pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {comment.status}
-                  </span>
-                </td>
-
-                <td className="text-right p-4 space-x-3">
-                  <button
-                    onClick={() =>
-                      updateStatus(comment._id || comment.id, "Approved")
-                    }
-                    className="text-green-600 hover:underline text-sm"
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      updateStatus(comment._id || comment.id, "Rejected")
-                    }
-                    className="text-yellow-600 hover:underline text-sm"
-                  >
-                    Reject
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      deleteComment(comment._id || comment.id)
-                    }
-                    className="text-red-600 hover:underline text-sm"
-                  >
-                    Delete
-                  </button>
-                </td>
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr className="bg-slate-50/50 text-slate-500 text-[11px] uppercase tracking-wider font-bold border-b border-slate-200">
+                <th className="py-4 px-6 w-1/4">User</th>
+                <th className="py-4 px-6 w-2/5">Comment</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6 text-right">Actions</th>
               </tr>
-            ))}
+            </thead>
 
-            {filteredComments.length === 0 && (
-              <tr>
-                <td
-                  colSpan="4"
-                  className="text-center p-6 text-gray-500"
-                >
-                  No comments found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            <tbody className="divide-y divide-slate-100 text-sm">
+              {filteredComments.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="py-16 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-4">
+                         <MessageSquare className="w-8 h-8 text-slate-300" />
+                      </div>
+                      <p className="text-[15px] font-bold text-slate-800">No comments found</p>
+                      <p className="text-sm font-medium text-slate-500 mt-1">There are no comments matching your criteria.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredComments.map((comment) => (
+                  <tr
+                    key={comment._id || comment.id}
+                    className="hover:bg-slate-50/80 transition-colors group"
+                  >
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-sm uppercase shadow-sm">
+                          {comment.user ? comment.user.substring(0,2) : '?'}
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-900 block leading-tight">{comment.user || 'Unknown User'}</span>
+                          <span className="text-xs text-slate-500 font-medium">{new Date(comment.createdAt || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-4 px-6">
+                      <p className="text-slate-700 font-medium line-clamp-2 max-w-md">
+                        {comment.content}
+                      </p>
+                    </td>
+
+                    <td className="py-4 px-6">
+                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border ${
+                        comment.status === "Approved"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200/50"
+                          : comment.status === "Pending"
+                          ? "bg-amber-50 text-amber-700 border-amber-200/50"
+                          : "bg-red-50 text-red-700 border-red-200/50"
+                      }`}>
+                        {comment.status === 'Approved' && <CheckCircle2 className="w-3 h-3" />}
+                        {comment.status === 'Pending' && <Clock className="w-3 h-3" />}
+                        {comment.status === 'Rejected' && <XCircle className="w-3 h-3" />}
+                        {comment.status || "Pending"}
+                      </div>
+                    </td>
+
+                    <td className="py-4 px-6 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {comment.status !== 'Approved' && (
+                          <button
+                            onClick={() => updateStatus(comment._id || comment.id, "Approved")}
+                            className="p-2 text-slate-400 hover:text-emerald-600 bg-white border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50 rounded-xl transition-all shadow-sm"
+                            title="Approve"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                          </button>
+                        )}
+                        {comment.status !== 'Rejected' && (
+                          <button
+                            onClick={() => updateStatus(comment._id || comment.id, "Rejected")}
+                            className="p-2 text-slate-400 hover:text-amber-600 bg-white border border-slate-200 hover:border-amber-200 hover:bg-amber-50 rounded-xl transition-all shadow-sm"
+                            title="Reject"
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                        )}
+                        <div className="w-px h-6 bg-slate-200 mx-1"></div>
+                        <button
+                          onClick={() => deleteComment(comment._id || comment.id)}
+                          className="p-2 text-slate-400 hover:text-red-600 bg-white border border-slate-200 hover:border-red-200 hover:bg-red-50 rounded-xl transition-all shadow-sm"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

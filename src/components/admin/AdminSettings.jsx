@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../assets/api";
+import { Settings, Globe, Mail, Search, Share2, CheckCircle2 } from "lucide-react";
 
 const AdminSettings = () => {
   const [settings, setSettings] = useState({
@@ -43,6 +44,7 @@ const AdminSettings = () => {
     try {
       await api.post("/settings", settings);
       setSuccessMsg("Settings updated successfully!");
+      setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
       console.error(err);
       alert("Failed to update settings. Please check server.");
@@ -52,95 +54,156 @@ const AdminSettings = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md max-w-3xl">
-      <h1 className="text-2xl font-bold mb-6">Website Settings</h1>
+    <div className="space-y-6 max-w-4xl">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Platform Settings</h1>
+          <p className="text-sm font-medium text-slate-500 mt-1">Configure your main application parameters</p>
+        </div>
+      </div>
 
       {successMsg && (
-        <div className="bg-green-100 text-green-700 p-3 rounded mb-4">
-          {successMsg}
+        <div className="flex items-center gap-3 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-3 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+          <span className="font-bold text-sm">{successMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSave} className="space-y-6">
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Site Name</label>
-          <input
-            type="text"
-            name="siteName"
-            value={settings.siteName}
-            onChange={handleChange}
-            className="w-full border p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Contact Email</label>
-          <input
-            type="email"
-            name="contactEmail"
-            value={settings.contactEmail}
-            onChange={handleChange}
-            className="w-full border p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">SEO Description</label>
-          <textarea
-            name="seoDescription"
-            value={settings.seoDescription}
-            onChange={handleChange}
-            className="w-full border p-3 rounded-md h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-          ></textarea>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Facebook URL</label>
-            <input
-              type="url"
-              name="facebookUrl"
-              value={settings.facebookUrl}
-              onChange={handleChange}
-              className="w-full border p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        
+        {/* General Settings */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+              <Globe className="w-4 h-4 text-blue-600" />
+            </div>
+            <h2 className="text-[16px] font-bold text-slate-900">General Information</h2>
           </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Twitter URL</label>
-            <input
-              type="url"
-              name="twitterUrl"
-              value={settings.twitterUrl}
-              onChange={handleChange}
-              className="w-full border p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          
+          <div className="p-6 space-y-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Site Name</label>
+                  <input
+                    type="text"
+                    name="siteName"
+                    value={settings.siteName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-semibold text-slate-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Contact Email</label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="email"
+                      name="contactEmail"
+                      value={settings.contactEmail}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-semibold text-slate-900"
+                      required
+                    />
+                  </div>
+                </div>
+             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 mt-4">
-          <input
-            type="checkbox"
-            name="maintenanceMode"
-            id="maintenanceMode"
-            checked={settings.maintenanceMode}
-            onChange={handleChange}
-            className="w-5 h-5 text-blue-600 focus:ring-blue-500 rounded"
-          />
-          <label htmlFor="maintenanceMode" className="text-gray-700 font-medium cursor-pointer">
-            Enable Maintenance Mode
-          </label>
+        {/* SEO & Social */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+              <Search className="w-4 h-4 text-indigo-600" />
+            </div>
+            <h2 className="text-[16px] font-bold text-slate-900">SEO & Social Links</h2>
+          </div>
+          
+          <div className="p-6 space-y-6">
+             <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">SEO Description / Meta Tag</label>
+                <textarea
+                  name="seoDescription"
+                  rows="3"
+                  value={settings.seoDescription}
+                  onChange={handleChange}
+                  placeholder="Brief description for search engines..."
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-medium text-slate-800 resize-none"
+                />
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Facebook Page URL</label>
+                  <div className="relative">
+                    <Share2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="url"
+                      name="facebookUrl"
+                      value={settings.facebookUrl}
+                      onChange={handleChange}
+                      placeholder="https://facebook.com/yourpage"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-medium text-slate-800"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Twitter Profile URL</label>
+                  <div className="relative">
+                    <Share2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="url"
+                      name="twitterUrl"
+                      value={settings.twitterUrl}
+                      onChange={handleChange}
+                      placeholder="https://twitter.com/yourhandle"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-sm font-medium text-slate-800"
+                    />
+                  </div>
+                </div>
+             </div>
+          </div>
         </div>
 
-        <div className="pt-4 border-t">
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
-          >
-            {loading ? "Saving..." : "Save Settings"}
-          </button>
+        {/* Advanced Systems */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+            <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center">
+              <Settings className="w-4 h-4 text-orange-600" />
+            </div>
+            <h2 className="text-[16px] font-bold text-slate-900">System Preferences</h2>
+          </div>
+          
+          <div className="p-6">
+            <label className="flex items-center gap-4 cursor-pointer group w-fit">
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  name="maintenanceMode"
+                  checked={settings.maintenanceMode}
+                  onChange={handleChange}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500 transition-colors"></div>
+              </div>
+              <div>
+                <span className="text-sm font-bold text-slate-900 block group-hover:text-orange-600 transition-colors">Enable Maintenance Mode</span>
+                <span className="text-xs text-slate-500 font-medium mt-0.5 block">Hide public access while performing upgrades.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-4">
+           <button
+             type="submit"
+             disabled={loading}
+             className="px-8 py-3 bg-blue-600 text-white font-bold text-sm rounded-xl hover:bg-blue-700 transition-all shadow-sm shadow-blue-200 disabled:opacity-50 active:scale-[0.98] flex items-center gap-2"
+           >
+             <CheckCircle2 className="w-4 h-4" />
+             {loading ? "Saving Changes..." : "Save Preferences"}
+           </button>
         </div>
       </form>
     </div>
