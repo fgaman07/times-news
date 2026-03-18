@@ -12,6 +12,10 @@ import VideoPage from './components/VideoPage'
 import EPaperPage from './components/EPaperPage'
 import WebStoryPage from './components/WebStoryPage'
 
+import AboutUs from './components/AboutUs'
+import Contact from './components/Contact'
+import PrivacyPolicy from './components/PrivacyPolicy'
+import TermsCondition from './components/TermsCondition'
 
 import AdminRoute from './components/admin/AdminRoute'
 import AdminLayout from './components/admin/AdminLayout'
@@ -44,7 +48,10 @@ function App() {
         <Route path="/epaper" element={<EPaperPage />} />
         <Route path="/webstory" element={<WebStoryPage />} />
 
-        
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsCondition />} />
 
         <Route path="/admin" element={
           <AdminRoute>

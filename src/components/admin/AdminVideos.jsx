@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../assets/api";
-import { Plus, Edit2, Trash2, Video, X, Search, Youtube, Play, CheckCircle2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Video, X, Search, Youtube, Play, CheckCircle2, Pin } from "lucide-react";
 
 const AdminVideos = () => {
   const [categories, setCategories] = useState([]);
@@ -36,7 +36,8 @@ const AdminVideos = () => {
     const fetchVideos = async () => {
       try {
         const { data } = await api.get("/videos");
-        setVideos(data.data || data || []);
+        const videoList = data.data?.videos || data.data || [];
+        setVideos(Array.isArray(videoList) ? videoList : []);
       } catch (err) {
         console.error("Failed to fetch videos", err);
       }
@@ -128,6 +129,21 @@ const AdminVideos = () => {
     } catch (err) {
       console.error(err);
       alert("Failed to delete video");
+    }
+  };
+
+  const handlePin = async (id) => {
+    try {
+      await api.patch(`/videos/${id}/top`);
+      setVideos((prev) => 
+        prev.map((v) => ({
+          ...v,
+          isTopVideo: (v._id || v.id) === id
+        }))
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to pin video");
     }
   };
 
@@ -398,7 +414,14 @@ const AdminVideos = () => {
                         </a>
                       </td>
                       <td className="py-4 px-6 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className={`flex items-center justify-end gap-2 transition-opacity ${video.isTopVideo ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                          <button 
+                            onClick={() => handlePin(video._id || video.id)}
+                            className={`p-2 rounded-xl transition-all shadow-sm border ${video.isTopVideo ? 'text-amber-500 bg-amber-50 border-amber-200' : 'text-slate-400 hover:text-amber-500 bg-white border-slate-200 hover:border-amber-200 hover:bg-amber-50'}`}
+                            title={video.isTopVideo ? "Pinned to Top News" : "Pin to Top News"}
+                          >
+                            <Pin className="w-4 h-4" fill={video.isTopVideo ? "currentColor" : "none"} />
+                          </button>
                           <button 
                             onClick={() => handleEdit(video)}
                             className="p-2 text-slate-400 hover:text-blue-600 bg-white border border-slate-200 hover:border-blue-200 hover:bg-blue-50 rounded-xl transition-all shadow-sm"

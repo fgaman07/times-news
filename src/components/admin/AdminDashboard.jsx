@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../assets/api";
 import { useUser } from "./UserContext";
+import { useNavigate } from "react-router-dom";
 import {
   Newspaper,
   Video,
@@ -22,6 +23,7 @@ const AdminDashboard = () => {
 
   const [recentNews, setRecentNews] = useState([]);
   const { currentUser } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -34,7 +36,8 @@ const AdminDashboard = () => {
         ]);
 
         const news = newsRes.data?.data?.articles || [];
-        const videos = videosRes.data?.data || [];
+        const videosData = videosRes.data?.data || {};
+        const videos = videosData.videos || (Array.isArray(videosData) ? videosData : []);
         const webstories = storiesRes.data?.data || [];
         let users = usersRes.data?.data || [];
         if (!Array.isArray(users)) users = usersRes.data || [];
@@ -46,7 +49,8 @@ const AdminDashboard = () => {
           users: users.length,
         });
 
-        setRecentNews(news.slice(-5).reverse());
+        const sortedNews = [...news].sort((a, b) => new Date(b.createdAt || Date.now()) - new Date(a.createdAt || Date.now()));
+        setRecentNews(sortedNews.slice(0, 5));
       } catch (err) {
         console.error("Failed to fetch dashboard stats", err);
       }
@@ -55,10 +59,10 @@ const AdminDashboard = () => {
   }, []);
 
   const statCards = [
-    { title: "Total Articles", value: stats.news, icon: Newspaper, color: "text-blue-600", bg: "bg-blue-50", trend: "+12%" },
-    { title: "Video Content", value: stats.videos, icon: Video, color: "text-purple-600", bg: "bg-purple-50", trend: "+4%" },
-    { title: "Web Stories", value: stats.webstories, icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50", trend: "+23%" },
-    { title: "Active Users", value: stats.users, icon: Users, color: "text-orange-600", bg: "bg-orange-50", trend: "+2%" }
+    { title: "Total Articles", value: stats.news, icon: Newspaper, color: "text-blue-600", bg: "bg-blue-50", trend: "+12%", path: "/admin/news" },
+    { title: "Video Content", value: stats.videos, icon: Video, color: "text-purple-600", bg: "bg-purple-50", trend: "+4%", path: "/admin/videos" },
+    { title: "Web Stories", value: stats.webstories, icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50", trend: "+23%", path: "/admin/webstory" },
+    { title: "Active Users", value: stats.users, icon: Users, color: "text-orange-600", bg: "bg-orange-50", trend: "+2%", path: "/admin/users" }
   ];
 
   return (
@@ -89,7 +93,11 @@ const AdminDashboard = () => {
         {statCards.map((card, idx) => {
           const Icon = card.icon;
           return (
-            <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-200 hover:shadow-md transition-all group">
+            <div 
+              key={idx} 
+              onClick={() => navigate(card.path)}
+              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all group cursor-pointer hover:-translate-y-1 block"
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">{card.title}</p>
@@ -115,7 +123,10 @@ const AdminDashboard = () => {
           <h2 className="text-lg font-bold text-slate-900">
             Recent Articles
           </h2>
-          <button className="text-blue-600 text-sm font-semibold hover:text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors shrink-0">
+          <button 
+            onClick={() => navigate('/admin/news')}
+            className="text-blue-600 text-sm font-semibold hover:text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors shrink-0"
+          >
             View All
           </button>
         </div>

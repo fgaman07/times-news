@@ -1,5 +1,6 @@
 import React from 'react'
 import { Facebook, Twitter, Youtube, Instagram } from "lucide-react";
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -25,11 +26,11 @@ const Footer = () => {
             न्यूज़
           </h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-orange-500 cursor-pointer">देश</li>
-            <li className="hover:text-orange-500 cursor-pointer">विदेश</li>
-            <li className="hover:text-orange-500 cursor-pointer">राज्य</li>
-            <li className="hover:text-orange-500 cursor-pointer">शहर</li>
-            <li className="hover:text-orange-500 cursor-pointer">क्रिकेट</li>
+            <li><Link to="/category/देश" className="hover:text-orange-500 cursor-pointer">देश</Link></li>
+            <li><Link to="/category/विदेश" className="hover:text-orange-500 cursor-pointer">विदेश</Link></li>
+            <li><Link to="/category/राज्य" className="hover:text-orange-500 cursor-pointer">राज्य</Link></li>
+            <li><Link to="/category/शहर" className="hover:text-orange-500 cursor-pointer">शहर</Link></li>
+            <li><Link to="/category/क्रिकेट" className="hover:text-orange-500 cursor-pointer">क्रिकेट</Link></li>
           </ul>
         </div>
 
@@ -39,10 +40,10 @@ const Footer = () => {
             उपयोगी लिंक
           </h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-orange-500 cursor-pointer">About Us</li>
-            <li className="hover:text-orange-500 cursor-pointer">Contact</li>
-            <li className="hover:text-orange-500 cursor-pointer">Privacy Policy</li>
-            <li className="hover:text-orange-500 cursor-pointer">Terms & Conditions</li>
+            <li><Link to="/about" className="hover:text-orange-500 cursor-pointer">About Us</Link></li>
+            <li><Link to="/contact" className="hover:text-orange-500 cursor-pointer">Contact</Link></li>
+            <li><Link to="/privacy" className="hover:text-orange-500 cursor-pointer">Privacy Policy</Link></li>
+            <li><Link to="/terms" className="hover:text-orange-500 cursor-pointer">Terms & Conditions</Link></li>
           </ul>
         </div>
 
@@ -52,10 +53,18 @@ const Footer = () => {
             Follow Us
           </h3>
           <div className="flex gap-4">
-            <Facebook className="hover:text-orange-500 cursor-pointer" />
-            <Twitter className="hover:text-orange-500 cursor-pointer" />
-            <Youtube className="hover:text-orange-500 cursor-pointer" />
-            <Instagram className="hover:text-orange-500 cursor-pointer" />
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-orange-500 transition-colors">
+              <Facebook className="cursor-pointer" />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-orange-500 transition-colors">
+              <Twitter className="cursor-pointer" />
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-orange-500 transition-colors">
+              <Youtube className="cursor-pointer" />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-orange-500 transition-colors">
+              <Instagram className="cursor-pointer" />
+            </a>
           </div>
         </div>
 
