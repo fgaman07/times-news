@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../assets/api";
-import { Plus, Edit2, Trash2, Image as ImageIcon, X, Search, FileText, UploadCloud, CheckCircle2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Image as ImageIcon, X, Search, FileText, UploadCloud, CheckCircle2, Settings2 } from "lucide-react";
 
 const AdminNews = () => {
   const [categories, setCategories] = useState([]);

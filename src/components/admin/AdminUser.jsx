@@ -137,7 +137,7 @@ const AdminUsers = () => {
               >
                 <option value="Admin">Admin</option>
                 <option value="Editor">Editor</option>
-                <option value="Author">Author</option>
+                <option value="Reporter">Reporter</option>
                 <option value="User">User</option>
               </select>
             </div>
@@ -226,7 +226,7 @@ const AdminUsers = () => {
                         >
                           <option value="Admin">Admin</option>
                           <option value="Editor">Editor</option>
-                          <option value="Author">Author</option>
+                          <option value="Reporter">Reporter</option>
                           <option value="User">User</option>
                         </select>
                       </div>

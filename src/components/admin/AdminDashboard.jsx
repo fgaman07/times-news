@@ -73,7 +73,7 @@ const AdminDashboard = () => {
             Overview of your system metrics and recent activities
           </p>
         </div>
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <button className="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-semibold transition-colors shadow-sm text-sm">
             Generate Report
           </button>
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
             <Plus className="w-4 h-4" />
             <span>New Post</span>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Stats Section */}
@@ -111,11 +111,11 @@ const AdminDashboard = () => {
 
       {/* Recent News Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-lg font-bold text-slate-900">
             Recent Articles
           </h2>
-          <button className="text-blue-600 text-sm font-semibold hover:text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">
+          <button className="text-blue-600 text-sm font-semibold hover:text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors shrink-0">
             View All
           </button>
         </div>
