@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
-import { Home, Video, Search, User, BookOpen, Layers, LogOut, Settings, ChevronDown } from "lucide-react"
+import { Home, Video, Search, User, BookOpen, Layers, LogOut, Settings, ChevronDown, KeyRound } from "lucide-react"
 import { useUser } from './admin/UserContext.jsx';
-
+import logoImg from '../assets/aajkamudda2.jpg';
 const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  // 🚀 NAYA STATE: Dropdown ke liye
+  // 🚀 NEW STATE: For Dropdown
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // 🚀 NAYA REF: Dropdown box ko pehchanne ke liye
+  // 🚀 NEW REF: To reference the dropdown box
   const dropdownRef = useRef(null);
 
   const navigate = useNavigate();
@@ -26,12 +26,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    setDropdownOpen(false); // Logout hone par menu band kar do
+    setDropdownOpen(false); // Close menu on logout
     navigate("/");
   };
 
   // 🚀 THE MAGIC: Click Outside Logic
-  // Agar user dropdown ke bahar click kare, toh dropdown close kar do
+  // Close the dropdown if the user clicks outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -48,23 +48,16 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center">
 
         {/* Logo */}
-        <div className="w-64 shrink-0 flex items-center">
+        <div className="w-auto md:w-64 shrink-0 flex items-center pr-2">
           <NavLink
             to="/"
             className="inline-block group cursor-pointer"
           >
-            <span
-              className="text-3xl md:text-3xl font-black italic tracking-tighter transition-all duration-300 text-red-700 group-hover:text-orange-400"
-              style={{
-                display: 'inline-block',
-                fontFamily: "'Arial Black', 'Impact', sans-serif",
-                lineHeight: '0.9',
-                paddingBottom: '2px',
-                letterSpacing: '-0.02em'
-              }}
-            >
-              Times News
-            </span>
+            <img
+              src={logoImg}
+              alt="Times News Logo"
+              className="h-12 sm:h-12 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+            />
           </NavLink>
         </div>
         {/* 🔵 CENTER: Main navigation */}
@@ -114,30 +107,30 @@ const Navbar = () => {
         </div>
 
         {/* 🟢 RIGHT: Secondary actions & User Profile */}
-        <div className="w-auto flex justify-end items-center gap-5 font-bold shrink-0 text-gray-700">
+        <div className="w-auto flex justify-end items-center gap-2 sm:gap-5 font-bold shrink-0 text-gray-700">
           <NavLink to="/epaper" className={({ isActive }) =>
-            `flex items-center gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+            `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-sm sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
           }>
-            <BookOpen size={20} />
-            <span>ई-पेपर</span>
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">ई-पेपर</span>
           </NavLink>
 
           <NavLink to="/webstory" className={({ isActive }) =>
-            `flex items-center gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+            `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-sm sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
           }>
-            <Layers size={20} />
-            <span>वेब स्टोरी</span>
+            <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">वेबस्टोरी</span>
           </NavLink>
 
           {/* 👤 USER SECTION (LOGIN OR DROPDOWN) */}
-          <div className="ml-2 pl-4 border-l border-gray-200">
+          <div className="sm:ml-2 sm:pl-4 border-l border-gray-200">
             {!currentUser ? (
               // Login Button for Guests
               <button
                 onClick={() => navigate("/login")}
-                className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-full hover:bg-red-100 transition-colors"
+                className="flex items-center gap-1 sm:gap-2 bg-red-50 text-red-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full hover:bg-red-100 transition-colors text-sm sm:text-base"
               >
-                <User size={18} />
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>लॉगिन</span>
               </button>
             ) : (
@@ -145,20 +138,20 @@ const Navbar = () => {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
+                  className="flex items-center gap-1 sm:gap-2 bg-gray-50 border border-gray-200 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
                 >
                   {/* Agar user ka avatar hai toh wo dikhao, warna default icon */}
                   {currentUser.avatar ? (
-                    <img src={currentUser.avatar} alt="Profile" className="w-7 h-7 rounded-full object-cover" />
+                    <img src={currentUser.avatar} alt="Profile" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover" />
                   ) : (
-                    <div className="w-7 h-7 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-                      <User size={16} />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                   )}
-                  <span className="text-sm font-semibold max-w-[100px] truncate">
+                  <span className="hidden sm:inline text-sm font-semibold max-w-[80px] truncate">
                     {currentUser.fullName || currentUser.username || "Account"}
                   </span>
-                  <ChevronDown size={16} className={`text-gray-500 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 {/* Dropdown Box */}
@@ -185,6 +178,17 @@ const Navbar = () => {
                           Admin Panel
                         </button>
                       )}
+
+                      <button
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          navigate("/change-password");
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center gap-2 transition-colors"
+                      >
+                        <KeyRound size={16} />
+                        पासवर्ड बदलें (Change Password)
+                      </button>
 
                       {/* Logout Button */}
                       <button

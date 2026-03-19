@@ -3,7 +3,7 @@ import Footer from './Footer';
 
 const AboutUs = () => {
 
-  // बुलेटप्रूफ स्क्रॉल टू टॉप लॉजिक (DOM लोड होने के बाद इंस्टेंट स्क्रॉल)
+  // Bulletproof scroll-to-top logic (instant scroll after DOM loads)
   useEffect(() => {
     window.scrollTo({
       top: 0,

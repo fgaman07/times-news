@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 import Footer from './Footer';
 
 const TermsCondition = () => {
-  // Component mount होने पर पेज को सबसे ऊपर स्क्रॉल करने के लिए useEffect का उपयोग
+  // Using useEffect to scroll the page to the top when the component mounts
   useEffect(() => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth' // यह एक स्मूद स्क्रॉल इफ़ेक्ट देगा
+      behavior: 'smooth' // This provides a smooth scrolling effect
     });
   }, []);
 
   return (
-    // <div> की जगह <main> का इस्तेमाल किया है, जो SEO और Accessibility के लिए बेस्ट प्रैक्टिस है
+    // Used <main> instead of <div>, which is a best practice for SEO and Accessibility
     <main className="bg-gray-50 min-h-screen pt-8 flex flex-col">
       {/* <article> टैग यह बताता है कि यह एक स्वतंत्र कंटेंट ब्लॉक है */}
       <article className="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white rounded-2xl shadow-sm border border-gray-100 mb-12 flex-grow">

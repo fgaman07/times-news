@@ -55,8 +55,8 @@ const NewsCatagory = ({ horizontal = false }) => {
       <ul className={`hide-scroll flex ${horizontal
           // 🚀 THE HORIZONTAL FIX: overflow-x-auto, snap-x for smoothness
           ? "flex-row overflow-x-auto whitespace-nowrap gap-3 px-3 snap-x scroll-smooth"
-          // 🚀 THE VERTICAL FIX: max-h, overflow-y-auto to scroll independently
-          : "flex-col overflow-y-auto max-h-[calc(100vh-8rem)]"
+          // 🚀 Vertical: No max-height or overflow so parent sticky JS can control scroll
+          : "flex-col"
         }`}>
 
         {categories.map((item, index) => {

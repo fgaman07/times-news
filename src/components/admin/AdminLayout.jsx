@@ -1,21 +1,22 @@
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Newspaper, 
-  Video, 
-  BookOpen, 
-  Tags, 
-  Users, 
-  ShieldCheck, 
-  MessageSquare, 
-  Image as ImageIcon, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Newspaper,
+  Video,
+  BookOpen,
+  Tags,
+  Users,
+  ShieldCheck,
+  MessageSquare,
+  Image as ImageIcon,
+  Settings,
   LogOut,
   Menu,
   Bell,
   Search,
   X,
-  ChevronDown
+  ChevronDown,
+  Megaphone
 } from "lucide-react";
 import { useState } from "react";
 
@@ -38,7 +39,8 @@ const AdminLayout = () => {
     { name: "Users", path: "/admin/users", icon: Users },
     { name: "Roles", path: "/admin/roles", icon: ShieldCheck },
     { name: "Comments", path: "/admin/comments", icon: MessageSquare },
-    { name: "Media", path: "/admin/media", icon: ImageIcon },
+    { name: "Ads", path: "/admin/ads", icon: Megaphone },
+    // { name: "Media", path: "/admin/media", icon: ImageIcon },
     { name: "Settings", path: "/admin/settings", icon: Settings },
   ];
 
@@ -53,17 +55,16 @@ const AdminLayout = () => {
     <div className="flex h-screen bg-[#F4F7F9] overflow-hidden font-sans text-slate-800">
       {/* Sidebar background overlay for mobile */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 lg:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside 
-        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transition-transform duration-300 ease-in-out flex flex-col shadow-2xl lg:shadow-none ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        } lg:w-64`}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transition-transform duration-300 ease-in-out flex flex-col shadow-2xl lg:shadow-none ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          } lg:w-64`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b border-transparent shrink-0 mt-2">
           <div className="flex items-center gap-3 font-bold text-xl text-slate-900 tracking-tight">
@@ -72,7 +73,7 @@ const AdminLayout = () => {
             </div>
             <span>Times News</span>
           </div>
-          <button 
+          <button
             className="lg:hidden p-1 text-slate-400 hover:text-slate-700 transition-colors"
             onClick={() => setSidebarOpen(false)}
           >
@@ -90,11 +91,10 @@ const AdminLayout = () => {
                 <NavLink
                   key={item.name}
                   to={item.path}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
-                    active 
-                      ? "bg-blue-50 text-blue-700 font-semibold" 
-                      : "hover:bg-slate-50 text-slate-500 hover:text-slate-900 font-medium"
-                  }`}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${active
+                    ? "bg-blue-50 text-blue-700 font-semibold"
+                    : "hover:bg-slate-50 text-slate-500 hover:text-slate-900 font-medium"
+                    }`}
                   onClick={() => window.innerWidth < 1024 && setSidebarOpen(false)}
                 >
                   <Icon className={`w-5 h-5 shrink-0 transition-colors ${active ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"}`} />
@@ -119,43 +119,16 @@ const AdminLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         {/* Top Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-50 shrink-0 shadow-sm relative">
+        {/* <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-50 shrink-0 shadow-sm relative">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-2 -ml-2 rounded-md text-slate-600 hover:bg-slate-50 transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
-            
-            <div className="hidden sm:flex items-center gap-2 text-slate-400 hover:text-slate-600 focus-within:text-blue-500 transition-colors bg-slate-50 focus-within:bg-white px-4 py-2 rounded-full border border-slate-200 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10">
-              <Search className="w-4 h-4" />
-              <input 
-                type="text" 
-                placeholder="Search anything..." 
-                className="bg-transparent border-none focus:outline-none text-sm text-slate-700 w-48 lg:w-96 placeholder-slate-400 font-medium"
-              />
-            </div>
           </div>
-
-          <div className="flex items-center gap-3 sm:gap-4">
-            <button className="relative p-2 text-slate-400 hover:text-slate-600 transition-colors rounded-full hover:bg-slate-50">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border-2 border-white"></span>
-            </button>
-            <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
-            <div className="flex items-center gap-3 cursor-pointer group">
-              <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-700 border border-blue-200 flex items-center justify-center font-bold text-sm">
-                A
-              </div>
-              <div className="hidden sm:block text-left">
-                <div className="text-sm font-semibold text-slate-800 leading-none mb-1">Admin User</div>
-                <div className="text-xs text-slate-500 font-medium leading-none">Superadmin</div>
-              </div>
-              <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-slate-600 hidden sm:block" />
-            </div>
-          </div>
-        </header>
+        </header> */}
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10">

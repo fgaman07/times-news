@@ -9,7 +9,8 @@ const NewsSection = () => {
 
   // ── STATES ──
   const [articles, setArticles] = useState([]);
-  const [videos, setVideos] = useState([]); // 🚀 MASTERSTROKE: Sirf ek Video State
+  const [videos, setVideos] = useState([]); // 🚀 MASTERSTROKE: Only a single Video State
+  const [ad, setAd] = useState(null);
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -26,6 +27,22 @@ const NewsSection = () => {
     setLoading(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [categoryName]);
+
+  // Fetch Ad
+  useEffect(() => {
+    const fetchAd = async () => {
+      try {
+        const res = await api.get('/ads?activeOnly=true&placement=feed');
+        const adsList = res.data?.data?.ads || [];
+        if (adsList.length > 0) {
+          setAd(adsList[Math.floor(Math.random() * adsList.length)]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch ad", error);
+      }
+    };
+    fetchAd();
+  }, []);
 
   // ── 2. FETCH DATA FUNCTION ──
   useEffect(() => {
@@ -57,7 +74,7 @@ const NewsSection = () => {
           return [...prev, ...newArticles.filter(a => !existingIds.has(a._id))];
         });
 
-        // Videos append logic (Sari videos ek jagah jama ho rahi hain)
+        // Videos append logic (All videos are gathered in one place)
         setVideos(prev => {
           if (page === 1) return newVideos;
           const existingIds = new Set(prev.map(v => v._id));
@@ -214,8 +231,21 @@ const NewsSection = () => {
       )}
 
       {/* ── AD 1 ── */}
-      <div className="bg-gray-50 border border-gray-200 rounded py-3 text-center">
-        <span className="text-xs text-gray-400 uppercase tracking-wider">विज्ञापन</span>
+      <div className="bg-gray-50 border border-gray-200 rounded text-center flex flex-col items-center justify-center overflow-hidden">
+        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1 mt-2">विज्ञापन</span>
+        {ad ? (
+          ad.type === 'script' ? (
+            <div className="w-full overflow-hidden flex justify-center items-center my-2" dangerouslySetInnerHTML={{ __html: ad.scriptCode }} />
+          ) : (
+            <a href={ad.link} target="_blank" rel="noreferrer" className="block w-full h-32 md:h-48 bg-gray-50 flex items-center justify-center p-2">
+              <img src={ad.imageUrl} alt={ad.title} className="max-w-full max-h-full object-contain hover:opacity-90 transition-opacity rounded" />
+            </a>
+          )
+        ) : (
+          <div className="w-full h-24 flex items-center justify-center">
+            <span className="text-gray-400 text-sm font-medium">Ad Space</span>
+          </div>
+        )}
       </div>
 
       {/* ── 4. TOP VIDEO GRID ── */}
@@ -240,7 +270,7 @@ const NewsSection = () => {
                   onClick={() => window.open(video.videoUrl, '_blank')}>
                   <div className="relative aspect-video bg-gray-200 overflow-hidden">
                     {thumb ? (
-                      <img src={thumb} alt={video.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img src={thumb} alt={video.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" />
                     ) : (
                       <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                         <Play size={32} className="text-white" fill="white" />
@@ -285,7 +315,7 @@ const NewsSection = () => {
                     className="flex gap-4 p-4 hover:bg-gray-50 transition cursor-pointer"
                   >
                     {item.thumbnail && (
-                      <img src={item.thumbnail} alt={item.title} className="w-36 h-24 md:w-44 md:h-28 object-cover rounded flex-shrink-0" />
+                      <img src={item.thumbnail} alt={item.title} className="w-36 h-24 md:w-44 md:h-28 object-cover rounded flex-shrink-0" loading="lazy" decoding="async" />
                     )}
                     <div className="flex flex-col justify-between flex-1 min-w-0">
                       <div>
@@ -315,7 +345,7 @@ const NewsSection = () => {
                         {/* 🚀 IMAGE WITH PLAY BUTTON OVERLAY */}
                         <div className="relative w-36 h-24 md:w-44 md:h-28 flex-shrink-0">
                           {thumb ? (
-                            <img src={thumb} alt={videoToRender.title} className="w-full h-full object-cover rounded" />
+                            <img src={thumb} alt={videoToRender.title} className="w-full h-full object-cover rounded" loading="lazy" decoding="async" />
                           ) : (
                             <div className="w-full h-full bg-gray-800 rounded" />
                           )}

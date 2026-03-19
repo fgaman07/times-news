@@ -10,10 +10,10 @@ const VideoPage = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        // Pagination wale backend ke hisaab se parameters add kiye hain
+        // Parameters added according to the backend pagination logic
         const res = await api.get('/videos?status=PUBLISHED&page=1&limit=20');
 
-        // 🚀 THE FIX: Yahan res.data.data ki jagah res.data.data.videos use karna hai
+        // 🚀 THE FIX: We must use res.data.data.videos instead of res.data.data here
         setVideos(res.data?.data?.videos || []);
       } catch (err) {
         console.error("Failed to fetch videos", err);

@@ -15,10 +15,10 @@ import {
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
-    news: 0,
-    videos: 0,
-    webstories: 0,
-    users: 0,
+    news: { count: 0, trend: "0%" },
+    videos: { count: 0, trend: "0%" },
+    webstories: { count: 0, trend: "0%" },
+    users: { count: 0, trend: "0%" },
   });
 
   const [recentNews, setRecentNews] = useState([]);
@@ -42,11 +42,27 @@ const AdminDashboard = () => {
         let users = usersRes.data?.data || [];
         if (!Array.isArray(users)) users = usersRes.data || [];
 
+        const calculateTrend = (items) => {
+          if (!items || items.length === 0) return "0%";
+          const now = new Date();
+          const sevenAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          const fourteenAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+          let curr = 0, prev = 0;
+          items.forEach(item => {
+            const dt = new Date(item.createdAt || item.date || Date.now());
+            if (dt >= sevenAgo) curr++;
+            else if (dt >= fourteenAgo && dt < sevenAgo) prev++;
+          });
+          if (prev === 0) return curr > 0 ? "+100%" : "0%";
+          const pct = Math.round(((curr - prev) / prev) * 100);
+          return pct > 0 ? `+${pct}%` : `${pct}%`;
+        };
+
         setStats({
-          news: news.length,
-          videos: videos.length,
-          webstories: webstories.length,
-          users: users.length,
+          news: { count: news.length, trend: calculateTrend(news) },
+          videos: { count: videos.length, trend: calculateTrend(videos) },
+          webstories: { count: webstories.length, trend: calculateTrend(webstories) },
+          users: { count: users.length, trend: calculateTrend(users) },
         });
 
         const sortedNews = [...news].sort((a, b) => new Date(b.createdAt || Date.now()) - new Date(a.createdAt || Date.now()));
@@ -59,10 +75,10 @@ const AdminDashboard = () => {
   }, []);
 
   const statCards = [
-    { title: "Total Articles", value: stats.news, icon: Newspaper, color: "text-blue-600", bg: "bg-blue-50", trend: "+12%", path: "/admin/news" },
-    { title: "Video Content", value: stats.videos, icon: Video, color: "text-purple-600", bg: "bg-purple-50", trend: "+4%", path: "/admin/videos" },
-    { title: "Web Stories", value: stats.webstories, icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50", trend: "+23%", path: "/admin/webstory" },
-    { title: "Active Users", value: stats.users, icon: Users, color: "text-orange-600", bg: "bg-orange-50", trend: "+2%", path: "/admin/users" }
+    { title: "Total Articles", value: stats.news.count, icon: Newspaper, color: "text-blue-600", bg: "bg-blue-50", trend: stats.news.trend, path: "/admin/news" },
+    { title: "Video Content", value: stats.videos.count, icon: Video, color: "text-purple-600", bg: "bg-purple-50", trend: stats.videos.trend, path: "/admin/videos" },
+    { title: "Web Stories", value: stats.webstories.count, icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50", trend: stats.webstories.trend, path: "/admin/webstory" },
+    { title: "Active Users", value: stats.users.count, icon: Users, color: "text-orange-600", bg: "bg-orange-50", trend: stats.users.trend, path: "/admin/users" }
   ];
 
   return (
@@ -93,8 +109,8 @@ const AdminDashboard = () => {
         {statCards.map((card, idx) => {
           const Icon = card.icon;
           return (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               onClick={() => navigate(card.path)}
               className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all group cursor-pointer hover:-translate-y-1 block"
             >
@@ -110,7 +126,7 @@ const AdminDashboard = () => {
               <div className="mt-4 flex items-center text-sm font-semibold text-emerald-600">
                 <TrendingUp className="w-4 h-4 mr-1.5" />
                 <span>{card.trend}</span>
-                <span className="text-slate-400 font-medium ml-2">from last month</span>
+                <span className="text-slate-400 font-medium ml-2">from last week</span>
               </div>
             </div>
           );
@@ -123,7 +139,7 @@ const AdminDashboard = () => {
           <h2 className="text-lg font-bold text-slate-900">
             Recent Articles
           </h2>
-          <button 
+          <button
             onClick={() => navigate('/admin/news')}
             className="text-blue-600 text-sm font-semibold hover:text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors shrink-0"
           >
@@ -165,8 +181,8 @@ const AdminDashboard = () => {
                     </td>
                     <td className="py-4 px-6">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${item.status === 'PUBLISHED'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-amber-100 text-amber-700'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-amber-100 text-amber-700'
                         }`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'PUBLISHED' ? 'bg-emerald-600' : 'bg-amber-600'}`}></span>
                         {item.status || "DRAFT"}

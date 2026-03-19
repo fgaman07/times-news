@@ -7,11 +7,12 @@ const AdminComments = () => {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
 
+  // 1. Fetch All Comments for Admin
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        // Assuming your API returns an array or { data: array }
-        const { data } = await api.get("/comments");
+        // Updated admin route
+        const { data } = await api.get("/comments/admin/all");
         setComments(data.data || data || []);
       } catch (err) {
         console.error("Failed to parse comments", err);
@@ -20,9 +21,11 @@ const AdminComments = () => {
     fetchComments();
   }, []);
 
+  // 2. Update Status (Approved, Pending, Rejected)
   const updateStatus = async (id, status) => {
     try {
-      await api.put(`/comments/${id}`, { status });
+      // Updated to PATCH and new admin route
+      await api.patch(`/comments/admin/${id}/status`, { status });
       setComments((prev) =>
         prev.map((c) => ((c._id || c.id) === id ? { ...c, status } : c))
       );
@@ -32,10 +35,12 @@ const AdminComments = () => {
     }
   };
 
+  // 3. Delete Comment
   const deleteComment = async (id) => {
     if (!window.confirm("Delete this comment?")) return;
     try {
-      await api.delete(`/comments/${id}`);
+      // Updated route to match backend setup
+      await api.delete(`/comments/c/${id}`);
       setComments((prev) => prev.filter((c) => (c._id || c.id) !== id));
     } catch (err) {
       console.error(err);
@@ -43,9 +48,12 @@ const AdminComments = () => {
     }
   };
 
+  // Filtering Logic (Updated to use author.fullName)
   const filteredComments = comments.filter((c) => {
     const matchesFilter = filter === "All" || c.status === filter;
-    const matchesSearch = c.user?.toLowerCase().includes(search.toLowerCase()) || c.content?.toLowerCase().includes(search.toLowerCase());
+    const userName = c.author?.fullName || "";
+    const matchesSearch = userName.toLowerCase().includes(search.toLowerCase()) ||
+      c.content?.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -60,7 +68,7 @@ const AdminComments = () => {
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
+
         {/* Toolbar */}
         <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
           <div className="relative max-w-md w-full">
@@ -109,7 +117,7 @@ const AdminComments = () => {
                   <td colSpan="4" className="py-16 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-4">
-                         <MessageSquare className="w-8 h-8 text-slate-300" />
+                        <MessageSquare className="w-8 h-8 text-slate-300" />
                       </div>
                       <p className="text-[15px] font-bold text-slate-800">No comments found</p>
                       <p className="text-sm font-medium text-slate-500 mt-1">There are no comments matching your criteria.</p>
@@ -125,10 +133,12 @@ const AdminComments = () => {
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-sm uppercase shadow-sm">
-                          {comment.user ? comment.user.substring(0,2) : '?'}
+                          {/* Updated to use author.fullName */}
+                          {comment.author?.fullName ? comment.author.fullName.substring(0, 2) : '?'}
                         </div>
                         <div>
-                          <span className="font-bold text-slate-900 block leading-tight">{comment.user || 'Unknown User'}</span>
+                          {/* Updated to use author.fullName */}
+                          <span className="font-bold text-slate-900 block leading-tight">{comment.author?.fullName || 'Unknown User'}</span>
                           <span className="text-xs text-slate-500 font-medium">{new Date(comment.createdAt || Date.now()).toLocaleDateString()}</span>
                         </div>
                       </div>
@@ -141,13 +151,12 @@ const AdminComments = () => {
                     </td>
 
                     <td className="py-4 px-6">
-                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border ${
-                        comment.status === "Approved"
+                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border ${comment.status === "Approved"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200/50"
                           : comment.status === "Pending"
-                          ? "bg-amber-50 text-amber-700 border-amber-200/50"
-                          : "bg-red-50 text-red-700 border-red-200/50"
-                      }`}>
+                            ? "bg-amber-50 text-amber-700 border-amber-200/50"
+                            : "bg-red-50 text-red-700 border-red-200/50"
+                        }`}>
                         {comment.status === 'Approved' && <CheckCircle2 className="w-3 h-3" />}
                         {comment.status === 'Pending' && <Clock className="w-3 h-3" />}
                         {comment.status === 'Rejected' && <XCircle className="w-3 h-3" />}

@@ -1,7 +1,7 @@
 import './App.css'
 import { useEffect } from 'react'
 import Home from './components/Home'
-import {Routes, Route} from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import NewsDetail from './components/NewsDetail'
 import Navbar from './components/Navbar'
 import SearchPage from './components/SearchPage'
@@ -11,6 +11,7 @@ import Signup from './components/Signup'
 import VideoPage from './components/VideoPage'
 import EPaperPage from './components/EPaperPage'
 import WebStoryPage from './components/WebStoryPage'
+import ChangePassword from './components/ChangePassword'
 
 import AboutUs from './components/AboutUs'
 import Contact from './components/Contact'
@@ -26,18 +27,28 @@ import AdminWebStory from './components/admin/AdminWebStory'
 import AdminCategories from './components/admin/AdminCatagories'
 import AdminUsers from './components/admin/AdminUser'
 import AdminRoles from './components/admin/AdminRoles'
-import AdminMedia from './components/admin/AdminMedia'
+// import AdminMedia from './components/admin/AdminMedia'
 import AdminComments from './components/admin/AdminComments'
 import AdminSettings from './components/admin/AdminSettings'
+import AdminAds from './components/admin/AdminAds'
+import ScrollToTop from './components/ScrollToTop'
+import { Helmet } from 'react-helmet-async'
 
 function App() {
 
   return (
     <>
+      <Helmet>
+        <title>Times News - Breaking News & Latest Updates</title>
+        <meta name="description" content="Times News delivers the latest breaking news, videos, web stories, and in-depth analysis across India and the globe." />
+        <meta property="og:title" content="Times News - Breaking News & Latest Updates" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <ScrollToTop />
       <Navbar />
 
       <Routes>
-        <Route path="/" element ={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/category/:categoryName" element={<Home />} />
         <Route path='/search' element={<SearchPage />} />
@@ -47,6 +58,7 @@ function App() {
         <Route path="/videos" element={<VideoPage />} />
         <Route path="/epaper" element={<EPaperPage />} />
         <Route path="/webstory" element={<WebStoryPage />} />
+        <Route path="/change-password" element={<ChangePassword />} />
 
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<Contact />} />
@@ -66,7 +78,8 @@ function App() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="roles" element={<AdminRoles />} />
           <Route path="comments" element={<AdminComments />} />
-          <Route path="media" element={<AdminMedia />} />
+          <Route path="ads" element={<AdminAds />} />
+          {/* <Route path="media" element={<AdminMedia />} /> */}
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 

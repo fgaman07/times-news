@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Footer from './Footer';
 
 const PrivacyPolicy = () => {
-  // पेज लोड होते ही टॉप पर स्क्रॉल करने के लिए
+  // To scroll to the top as soon as the page loads
   useEffect(() => {
     window.scrollTo({
       top: 0,
