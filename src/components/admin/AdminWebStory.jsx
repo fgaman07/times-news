@@ -12,7 +12,8 @@ const AdminWebStories = () => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
-    status: "DRAFT"
+    status: "DRAFT",
+    articleUrl: ""
   });
 
   const [image, setImage] = useState(null);
@@ -66,6 +67,7 @@ const AdminWebStories = () => {
     multipartData.append("title", formData.title);
     multipartData.append("category", formData.category);
     multipartData.append("status", formData.status);
+    if (formData.articleUrl) multipartData.append("articleUrl", formData.articleUrl);
     
     if (image) {
       multipartData.append("image", image);
@@ -94,7 +96,8 @@ const AdminWebStories = () => {
     setFormData({
       title: "",
       category: "",
-      status: "DRAFT"
+      status: "DRAFT",
+      articleUrl: ""
     });
     setImage(null);
     setPreview(null);
@@ -106,7 +109,8 @@ const AdminWebStories = () => {
     setFormData({
       title: story.title || "",
       category: story.category?._id || story.category || "",
-      status: story.status || "DRAFT"
+      status: story.status || "DRAFT",
+      articleUrl: story.articleUrl || ""
     });
     setPreview(story.image || story.preview);
     setImage(null);
@@ -181,6 +185,18 @@ const AdminWebStories = () => {
                     placeholder="E.g. Top 10 Tech Trends"
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-900 text-sm font-semibold placeholder:text-slate-400"
                     required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Article Link (Optional)</label>
+                  <input
+                    type="url"
+                    name="articleUrl"
+                    value={formData.articleUrl}
+                    onChange={handleChange}
+                    placeholder="https://example.com/news/tech"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all text-slate-900 text-sm font-semibold placeholder:text-slate-400"
                   />
                 </div>
                 
