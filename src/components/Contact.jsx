@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Footer from './Footer';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 
 const Contact = () => {
@@ -141,7 +140,6 @@ const Contact = () => {
 
         </div>
       </section>
-      <Footer />
     </main>
   );
 };

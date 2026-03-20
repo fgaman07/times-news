@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-gray-300 mt-10">
       
       {/* Top Section */}
-      <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 lg:py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 w-full">
         
         {/* Brand */}
         <div>
@@ -71,8 +71,15 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-800 text-center py-4 text-sm">
-        © {new Date().getFullYear()} Aaj Ka Mudda. All rights reserved.
+      <div className="border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-gray-400">
+          <p className="text-center md:text-left">© {new Date().getFullYear()} Aaj Ka Mudda. All rights reserved.</p>
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
+          </div>
+        </div>
       </div>
 
     </footer>

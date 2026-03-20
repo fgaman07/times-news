@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Footer from './Footer';
 
 const TermsCondition = () => {
   // Using useEffect to scroll the page to the top when the component mounts
@@ -60,7 +59,6 @@ const TermsCondition = () => {
           </div>
         </section>
       </article>
-      <Footer />
     </main>
   );
 };

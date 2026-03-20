@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Footer from './Footer';
 
 const AboutUs = () => {
 
@@ -73,7 +72,6 @@ const AboutUs = () => {
 
         </section>
       </article>
-      <Footer />
     </main>
   );
 };

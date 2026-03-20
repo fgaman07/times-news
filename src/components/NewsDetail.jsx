@@ -4,7 +4,6 @@ import { Clock, ChevronRight } from 'lucide-react';
 import api from '../assets/api';
 import { useUser } from './admin/UserContext';
 import RightSidebar from './RightSidebar';
-import Footer from './Footer';
 import { Helmet } from 'react-helmet-async';
 
 const NewsDetail = () => {
@@ -285,8 +284,6 @@ const NewsDetail = () => {
                     </div>
                 </div>
             </div>
-
-            <Footer />
         </div>
     );
 }

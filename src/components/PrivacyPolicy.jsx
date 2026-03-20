@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Footer from './Footer';
 
 const PrivacyPolicy = () => {
   // To scroll to the top as soon as the page loads
@@ -69,7 +68,6 @@ const PrivacyPolicy = () => {
           </div>
         </section>
       </article>
-      <Footer />
     </main>
   );
 };

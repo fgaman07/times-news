@@ -1,7 +1,8 @@
 import './App.css'
 import { useEffect } from 'react'
 import Home from './components/Home'
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, useLocation } from "react-router-dom"
+import Footer from './components/Footer'
 import NewsDetail from './components/NewsDetail'
 import Navbar from './components/Navbar'
 import SearchPage from './components/SearchPage'
@@ -35,7 +36,8 @@ import ScrollToTop from './components/ScrollToTop'
 import { Helmet } from 'react-helmet-async'
 
 function App() {
-
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
   return (
     <>
       <Helmet>
@@ -84,6 +86,7 @@ function App() {
         </Route>
 
       </Routes>
+      {!isAdminRoute && <Footer />}
     </>
   )
 }

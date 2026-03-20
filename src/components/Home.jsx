@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import NewsCatagory from './NewsCatagory';
 import RightSidebar from './RightSidebar';
-import Footer from './Footer';
 import NewsSection from './NewsSection';
 
 const Home = () => {
@@ -92,8 +91,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };
