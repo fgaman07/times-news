@@ -39,9 +39,9 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>Times News - Breaking News & Latest Updates</title>
-        <meta name="description" content="Times News delivers the latest breaking news, videos, web stories, and in-depth analysis across India and the globe." />
-        <meta property="og:title" content="Times News - Breaking News & Latest Updates" />
+        <title>Aaj Ka Mudda - Breaking News & Latest Updates</title>
+        <meta name="description" content="Aaj Ka Mudda delivers the latest breaking news, videos, web stories, and in-depth analysis across India and the globe." />
+        <meta property="og:title" content="Aaj Ka Mudda - Breaking News & Latest Updates" />
         <meta property="og:type" content="website" />
       </Helmet>
       <ScrollToTop />

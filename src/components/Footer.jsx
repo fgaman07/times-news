@@ -12,7 +12,7 @@ const Footer = () => {
         {/* Brand */}
         <div>
           <h2 className="text-xl font-bold text-white mb-3">
-            Times News
+            Aaj Ka Mudda
           </h2>
           <p className="text-sm leading-relaxed">
             भारत और दुनिया की ताज़ा खबरें, वीडियो, और विश्लेषण —
@@ -72,7 +72,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-800 text-center py-4 text-sm">
-        © {new Date().getFullYear()} Times News. All rights reserved.
+        © {new Date().getFullYear()} Aaj Ka Mudda. All rights reserved.
       </div>
 
     </footer>

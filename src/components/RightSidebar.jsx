@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Play, ChevronRight, Cloud, Sun, CloudRain, Loader2, AlertCircle, Wind } from 'lucide-react';
 import api from '../assets/api';
 
@@ -269,6 +269,17 @@ const RightSidebar = () => {
             <span className="text-gray-400 text-sm font-medium">Ad Space (300x250)</span>
           </div>
         )}
+      </div>
+
+      {/* Mini Footer */}
+      <div className="text-xs text-gray-500 text-center space-y-2 pt-4 border-t border-gray-100">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+          <Link to="/about" className="hover:text-red-600 transition-colors font-medium">About Us</Link>
+          <Link to="/contact" className="hover:text-red-600 transition-colors font-medium">Contact</Link>
+          <Link to="/privacy" className="hover:text-red-600 transition-colors font-medium">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-red-600 transition-colors font-medium">Terms & Conditions</Link>
+        </div>
+        <p className="font-semibold text-[11px]">© {new Date().getFullYear()} Aaj Ka Mudda.</p>
       </div>
 
     </div>

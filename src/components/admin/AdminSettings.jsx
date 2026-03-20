@@ -4,7 +4,7 @@ import { Settings, Globe, Mail, Search, Share2, CheckCircle2 } from "lucide-reac
 
 const AdminSettings = () => {
   const [settings, setSettings] = useState({
-    siteName: "Times News",
+    siteName: "Aaj Ka Mudda",
     contactEmail: "admin@timesnews.com",
     seoDescription: "The latest news and updates.",
     facebookUrl: "https://facebook.com",

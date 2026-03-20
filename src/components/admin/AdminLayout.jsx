@@ -71,7 +71,7 @@ const AdminLayout = () => {
             <div className="w-8 h-8 rounded-lg bg-blue-600 shadow-md shadow-blue-600/20 flex items-center justify-center shrink-0">
               <Newspaper className="w-5 h-5 text-white" />
             </div>
-            <span>Times News</span>
+            <span>Aaj Ka Mudda</span>
           </div>
           <button
             className="lg:hidden p-1 text-slate-400 hover:text-slate-700 transition-colors"

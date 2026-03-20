@@ -55,7 +55,7 @@ const Navbar = () => {
           >
             <img
               src={logoImg}
-              alt="Times News Logo"
+              alt="Aaj Ka Mudda Logo"
               className="h-12 sm:h-12 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
             />
           </NavLink>
