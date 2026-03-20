@@ -5,6 +5,7 @@ import api from '../assets/api';
 import { useUser } from './admin/UserContext';
 import RightSidebar from './RightSidebar';
 import { Helmet } from 'react-helmet-async';
+import DOMPurify from 'dompurify';
 
 const NewsDetail = () => {
     const { slug } = useParams();
@@ -161,10 +162,9 @@ const NewsDetail = () => {
                                     )}
                                 </div>
 
-                                {/* Article Content */}
                                 <div 
                                     className="text-lg leading-relaxed text-gray-800 prose prose-red max-w-none" 
-                                    dangerouslySetInnerHTML={{ __html: article.content || article.description }}>
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content || article.description) }}>
                                 </div>
 
                                 {isExternal && article.url && (
