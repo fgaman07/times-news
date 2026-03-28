@@ -82,7 +82,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-[60] bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm w-full">
+      <div className="sticky top-0 z-[100] bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm w-full">
         <div className="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
 
         {/* Left: Hamburger + Logo */}
