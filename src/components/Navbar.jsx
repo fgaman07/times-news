@@ -151,12 +151,12 @@ const Navbar = () => {
             <NavLink to="/epaper" className={({ isActive }) =>
               `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
             }>
-              <BookOpen className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+              <BookOpen className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-2" />
               <span className="hidden sm:inline">ई-पेपर</span>
             </NavLink>
 
             <NavLink to="/webstory" className={({ isActive }) =>
-              `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+              `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2  border-red-600" : ""}`
             }>
               <Layers className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">वेबस्टोरी</span>
