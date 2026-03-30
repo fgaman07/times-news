@@ -3,6 +3,8 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom"
 import { Home, Video, Search, User, BookOpen, Layers, LogOut, Settings, ChevronDown, KeyRound, Menu, X, ChevronRight, Shield } from "lucide-react"
 import { useUser } from './admin/UserContext.jsx';
 import logoImg from '../assets/aajkamudda2.jpg';
+import mobileLogo from "../assets/mobilelogo.jpeg"
+
 
 const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -74,10 +76,9 @@ const Navbar = () => {
 
   // Common drawer link style
   const drawerLinkClass = (isActive) =>
-    `flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${
-      isActive
-        ? "bg-gradient-to-r from-red-50 to-red-50/60 text-red-600 font-semibold shadow-sm shadow-red-100/40"
-        : "text-gray-700 hover:bg-gray-50 active:bg-gray-100"
+    `flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+      ? "bg-gradient-to-r from-red-50 to-red-50/60 text-red-600 font-semibold shadow-sm shadow-red-100/40"
+      : "text-gray-700 hover:bg-gray-50 active:bg-gray-100"
     }`;
 
   return (
@@ -85,136 +86,136 @@ const Navbar = () => {
       <div className="sticky top-0 z-[100] bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm w-full">
         <div className="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
 
-        {/* Left: Hamburger + Logo */}
-        <div className="flex items-center gap-1 sm:gap-2">
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors active:scale-90"
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Left: Hamburger + Logo */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors active:scale-90"
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
-          <NavLink to="/" onClick={handleScrollToTop} className="group cursor-pointer flex items-center shrink-0">
-            <img
-              src={logoImg}
-              alt="Aaj Ka Mudda Logo"
-              style={{ height: '32px', maxHeight: '32px' }}
-              className="w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-            />
-          </NavLink>
-        </div>
-
-        {/* Center: Desktop Nav */}
-        <div className="hidden md:flex flex-1 justify-center font-bold text-gray-700">
-          <div className="flex items-center gap-8">
-            <NavLink to="/" onClick={handleScrollToTop} className={({ isActive }) =>
-              `flex items-center gap-2 hover:text-red-600 transition-colors py-1 ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
-            }>
-              <Home size={20} />
-              <span>होम</span>
+            <NavLink to="/" onClick={handleScrollToTop} className="group cursor-pointer flex items-center shrink-0">
+              <img
+                src={logoImg}
+                alt="Aaj Ka Mudda Logo"
+                style={{ height: '32px', maxHeight: '32px' }}
+                className="w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+              />
             </NavLink>
-
-            <NavLink to="/videos" className={({ isActive }) =>
-              `flex items-center gap-2 hover:text-red-600 transition-colors py-1 ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
-            }>
-              <Video size={20} />
-              <span>वीडियो</span>
-            </NavLink>
-
-            {!searchOpen ? (
-              <div onClick={() => setSearchOpen(true)} className="flex items-center gap-2 cursor-pointer hover:text-red-600 transition-colors py-1">
-                <Search size={20} />
-                <span>खोजें</span>
-              </div>
-            ) : (
-              <form onSubmit={handleSearch} className="flex items-center">
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="समाचार खोजें..."
-                  className="border border-gray-200 rounded-full px-4 py-1.5 outline-none w-56 text-sm font-normal focus:border-red-500 focus:ring-1 focus:ring-red-500/20 transition-all bg-gray-50"
-                  autoFocus
-                  onBlur={(e) => {
-                    if (!e.currentTarget.contains(e.relatedTarget)) setSearchOpen(false);
-                  }}
-                />
-              </form>
-            )}
           </div>
-        </div>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-4 font-bold text-gray-700">
-          <NavLink to="/epaper" className={({ isActive }) =>
-            `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
-          }>
-            <BookOpen className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">ई-पेपर</span>
-          </NavLink>
+          {/* Center: Desktop Nav */}
+          <div className="hidden md:flex flex-1 justify-center font-bold text-gray-700">
+            <div className="flex items-center gap-8">
+              <NavLink to="/" onClick={handleScrollToTop} className={({ isActive }) =>
+                `flex items-center gap-2 hover:text-red-600 transition-colors py-1 ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+              }>
+                <Home size={20} />
+                <span>होम</span>
+              </NavLink>
 
-          <NavLink to="/webstory" className={({ isActive }) =>
-            `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
-          }>
-            <Layers className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">वेबस्टोरी</span>
-          </NavLink>
+              <NavLink to="/videos" className={({ isActive }) =>
+                `flex items-center gap-2 hover:text-red-600 transition-colors py-1 ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+              }>
+                <Video size={20} />
+                <span>वीडियो</span>
+              </NavLink>
 
-          <div className="pl-1.5 sm:pl-4 border-l border-gray-100">
-            {!currentUser ? (
-              <button
-                onClick={() => navigate("/login")}
-                className="flex items-center gap-1 sm:gap-2 bg-red-600 text-white px-3 sm:px-5 py-1.5 sm:py-2 rounded-full hover:bg-red-700 active:scale-95 transition-all text-[11px] sm:text-sm shadow-sm"
-              >
-                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>लॉगिन</span>
-              </button>
-            ) : (
-              <div className="relative" ref={dropdownRef}>
+              {!searchOpen ? (
+                <div onClick={() => setSearchOpen(true)} className="flex items-center gap-2 cursor-pointer hover:text-red-600 transition-colors py-1">
+                  <Search size={20} />
+                  <span>खोजें</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSearch} className="flex items-center">
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="समाचार खोजें..."
+                    className="border border-gray-200 rounded-full px-4 py-1.5 outline-none w-56 text-sm font-normal focus:border-red-500 focus:ring-1 focus:ring-red-500/20 transition-all bg-gray-50"
+                    autoFocus
+                    onBlur={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget)) setSearchOpen(false);
+                    }}
+                  />
+                </form>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-1.5 sm:gap-4 font-bold text-gray-700">
+            <NavLink to="/epaper" className={({ isActive }) =>
+              `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+            }>
+              <BookOpen className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">ई-पेपर</span>
+            </NavLink>
+
+            <NavLink to="/webstory" className={({ isActive }) =>
+              `flex items-center gap-1 sm:gap-2 hover:text-red-600 whitespace-nowrap py-1 transition-colors text-[10px] sm:text-base ${isActive ? "text-red-600 border-b-2 border-red-600" : ""}`
+            }>
+              <Layers className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">वेबस्टोरी</span>
+            </NavLink>
+
+            <div className="pl-1.5 sm:pl-4 border-l border-gray-100">
+              {!currentUser ? (
                 <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-1 sm:gap-2 bg-gray-50 border border-gray-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                  onClick={() => navigate("/login")}
+                  className="flex items-center gap-1 sm:gap-2 bg-red-600 text-white px-3 sm:px-5 py-1.5 sm:py-2 rounded-full hover:bg-red-700 active:scale-95 transition-all text-[11px] sm:text-sm shadow-sm"
                 >
-                  {currentUser.avatar ? (
-                    <img src={currentUser.avatar} alt="Profile" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>लॉगिन</span>
+                </button>
+              ) : (
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center gap-1 sm:gap-2 bg-gray-50 border border-gray-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    {currentUser.avatar ? (
+                      <img src={currentUser.avatar} alt="Profile" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-6 h-6 sm:w-7 sm:h-7 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                        <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </div>
+                    )}
+                    <span className="hidden lg:inline text-xs font-semibold max-w-[80px] truncate">
+                      {currentUser.fullName || currentUser.username || "Account"}
+                    </span>
+                    <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[100]">
+                      <div className="px-5 py-4 bg-gray-50/50 border-b border-gray-100 text-left">
+                        <p className="text-sm font-bold text-gray-900 truncate">{currentUser.fullName}</p>
+                        <p className="text-[11px] text-gray-500 truncate">{currentUser.email}</p>
+                      </div>
+                      <div className="p-1.5">
+                        {isAdmin && (
+                          <button onClick={() => goTo("/admin")} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl flex items-center gap-3 transition-colors">
+                            <Settings size={18} className="opacity-70" /> Admin Panel
+                          </button>
+                        )}
+                        <button onClick={() => goTo("/change-password")} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl flex items-center gap-3 transition-colors">
+                          <KeyRound size={18} className="opacity-70" /> पासवर्ड बदलें
+                        </button>
+                        <div className="h-px bg-gray-100 my-1 mx-2" />
+                        <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-3 transition-colors">
+                          <LogOut size={18} className="opacity-70" /> लॉगआउट
+                        </button>
+                      </div>
                     </div>
                   )}
-                  <span className="hidden lg:inline text-xs font-semibold max-w-[80px] truncate">
-                    {currentUser.fullName || currentUser.username || "Account"}
-                  </span>
-                  <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-500 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[100]">
-                    <div className="px-5 py-4 bg-gray-50/50 border-b border-gray-100 text-left">
-                      <p className="text-sm font-bold text-gray-900 truncate">{currentUser.fullName}</p>
-                      <p className="text-[11px] text-gray-500 truncate">{currentUser.email}</p>
-                    </div>
-                    <div className="p-1.5">
-                      {isAdmin && (
-                        <button onClick={() => goTo("/admin")} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl flex items-center gap-3 transition-colors">
-                          <Settings size={18} className="opacity-70" /> Admin Panel
-                        </button>
-                      )}
-                      <button onClick={() => goTo("/change-password")} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl flex items-center gap-3 transition-colors">
-                        <KeyRound size={18} className="opacity-70" /> पासवर्ड बदलें
-                      </button>
-                      <div className="h-px bg-gray-100 my-1 mx-2" />
-                      <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-3 transition-colors">
-                        <LogOut size={18} className="opacity-70" /> लॉगआउट
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
       </div>
 
       {/* ============ MOBILE DRAWER ============ */}
