@@ -3,7 +3,8 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom"
 import { Home, Video, Search, User, BookOpen, Layers, LogOut, Settings, ChevronDown, KeyRound, Menu, X, ChevronRight, Shield } from "lucide-react"
 import { useUser } from './admin/UserContext.jsx';
 import logoImg from '../assets/aajkamudda2.jpg';
-import mobileLogo from "../assets/mobilelogo.jpeg"
+import mobileLogo from "../assets/mobilelogo.jpg"
+import image from "../assets/image.png"
 
 
 const Navbar = () => {
@@ -87,7 +88,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
 
           {/* Left: Hamburger + Logo */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center sm:gap-2">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors active:scale-90"
@@ -96,9 +97,9 @@ const Navbar = () => {
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            <NavLink to="/" onClick={handleScrollToTop} className="group cursor-pointer flex items-center shrink-0">
+            <NavLink to="/" onClick={handleScrollToTop} className="group cursor-pointer flex items-center shrink-0 -ml-2 sm:ml-0">
               <img
-                src={logoImg}
+                src={mobileLogo}
                 alt="Aaj Ka Mudda Logo"
                 style={{ height: '32px', maxHeight: '32px' }}
                 className="w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
@@ -235,7 +236,7 @@ const Navbar = () => {
           >
             {/* --- Header --- */}
             <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <img src={logoImg} alt="Logo" style={{ height: '28px' }} className="w-auto" />
+              <img src={mobileLogo} alt="Logo" style={{ height: '28px' }} className="w-auto" />
               <button
                 onClick={() => setMenuOpen(false)}
                 className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all active:scale-90"
