@@ -4,7 +4,7 @@ import { Home, Video, Search, User, BookOpen, Layers, LogOut, Settings, ChevronD
 import { useUser } from './admin/UserContext.jsx';
 import logoImg from '../assets/aajkamudda2.jpg';
 import mobileLogo from "../assets/mobilelogo.jpg"
-import image from "../assets/image.png"
+
 
 
 const Navbar = () => {
@@ -97,13 +97,16 @@ const Navbar = () => {
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            <NavLink to="/" onClick={handleScrollToTop} className="group cursor-pointer flex items-center shrink-0 -ml-2 sm:ml-0">
-              <img
-                src={mobileLogo}
-                alt="Aaj Ka Mudda Logo"
-                style={{ height: '32px', maxHeight: '32px' }}
-                className="w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-              />
+            <NavLink to="/" onClick={handleScrollToTop} className="group cursor-pointer flex items-center shrink-0">
+              <picture>
+                <source media="(min-width: 768px)" srcSet={logoImg} />
+                <img
+                  src={mobileLogo}
+                  alt="Aaj Ka Mudda Logo"
+                  style={{ height: '32px', maxHeight: '32px' }}
+                  className="w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                />
+              </picture>
             </NavLink>
           </div>
 
