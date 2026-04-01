@@ -16,7 +16,8 @@ import {
   Search,
   X,
   ChevronDown,
-  Megaphone
+  Megaphone,
+  FileText
 } from "lucide-react";
 import { useState } from "react";
 
@@ -39,6 +40,7 @@ const AdminLayout = () => {
     { name: "Users", path: "/admin/users", icon: Users },
     { name: "Roles", path: "/admin/roles", icon: ShieldCheck },
     { name: "Comments", path: "/admin/comments", icon: MessageSquare },
+    { name: "E-Paper", path: "/admin/epaper", icon: FileText },
     { name: "Ads", path: "/admin/ads", icon: Megaphone },
     // { name: "Media", path: "/admin/media", icon: ImageIcon },
     { name: "Settings", path: "/admin/settings", icon: Settings },

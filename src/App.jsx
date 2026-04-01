@@ -32,6 +32,7 @@ import AdminRoles from './components/admin/AdminRoles'
 import AdminComments from './components/admin/AdminComments'
 import AdminSettings from './components/admin/AdminSettings'
 import AdminAds from './components/admin/AdminAds'
+import AdminEPaper from './components/admin/AdminEPaper'
 import ScrollToTop from './components/ScrollToTop'
 import { Helmet } from 'react-helmet-async'
 
@@ -82,6 +83,7 @@ function App() {
             <Route path="roles" element={<AdminRoles />} />
             <Route path="comments" element={<AdminComments />} />
             <Route path="ads" element={<AdminAds />} />
+            <Route path="epaper" element={<AdminEPaper />} />
             {/* <Route path="media" element={<AdminMedia />} /> */}
             <Route path="settings" element={<AdminSettings />} />
           </Route>
