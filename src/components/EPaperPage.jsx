@@ -311,9 +311,6 @@ const EPaperPage = () => {
                 }`}
               >
                 <img src={page.imageUrl} alt="" className="w-full h-full object-cover" />
-                <div className={`absolute bottom-0 left-0 right-0 py-1 text-[9px] font-black text-center text-white ${currentPageIndex === idx ? 'bg-red-600' : 'bg-black/60'}`}>
-                  PAGE {idx + 1}
-                </div>
               </button>
             ))}
           </div>

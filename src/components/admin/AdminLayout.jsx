@@ -20,14 +20,16 @@ import {
   FileText
 } from "lucide-react";
 import { useState } from "react";
+import { useUser } from "./UserContext";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useUser();
 
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 
